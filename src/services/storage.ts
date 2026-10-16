@@ -12,7 +12,7 @@ const STORAGE_KEYS = {
   CONCESSIONS: 'shopbox_cinema_concessions_v2',
 };
 
-// Generate the 72 seats matching Seats.jpg
+// Generate the 72 seats matching Seats.jpg with accessible and companion designations
 export const THEATER_SEATS: TheaterSeat[] = (() => {
   const seats: TheaterSeat[] = [];
   const rowLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
@@ -21,12 +21,24 @@ export const THEATER_SEATS: TheaterSeat[] = (() => {
   for (let r = 1; r <= 9; r++) {
     const rowLabel = rowLabels[r - 1];
     for (let c = 1; c <= 8; c++) {
+      let category: TheaterSeat['category'] = 'standard';
+      // Front row (Row A): Seats 1 & 8 wheelchair accessible, 2 & 7 companion
+      if (r === 1) {
+        if (c === 1 || c === 8) category = 'wheelchair';
+        else if (c === 2 || c === 7) category = 'companion';
+      }
+      // Back row (Row I center): VIP couples
+      else if (r === 9 && (c === 4 || c === 5)) {
+        category = 'vip';
+      }
+
       seats.push({
         id: seatNumber,
         row: r,
         rowLabel,
         col: c,
         block: c <= 4 ? 'left' : 'right',
+        category,
       });
       seatNumber++;
     }
@@ -216,11 +228,11 @@ export function getFormattedDate(offsetDays = 0): string {
 
 export function generateDefaultShowtimes(ticketPrice = 350): Showtime[] {
   const showtimes: Showtime[] = [];
-  const times = [
-    { time: '11:00 AM', movieId: 'mov-4' },
-    { time: '02:00 PM', movieId: 'mov-1' },
-    { time: '05:45 PM', movieId: 'mov-2' },
-    { time: '09:15 PM', movieId: 'mov-3' },
+  const times: Array<{ time: string; movieId: string; format: Showtime['format'] }> = [
+    { time: '11:00 AM', movieId: 'mov-4', format: 'Dolby Atmos 7.1' },
+    { time: '02:00 PM', movieId: 'mov-1', format: '4K Laser' },
+    { time: '05:45 PM', movieId: 'mov-2', format: '4K Laser' },
+    { time: '09:15 PM', movieId: 'mov-3', format: "Director's Cut" },
   ];
 
   for (let i = 0; i < 7; i++) {
@@ -233,6 +245,7 @@ export function generateDefaultShowtimes(ticketPrice = 350): Showtime[] {
         time: slot.time,
         price: ticketPrice,
         hall: 'Hall 1 (Main Theater)',
+        format: slot.format,
       });
     });
   }
@@ -603,3 +616,53 @@ export const CinemaStorage = {
     window.location.reload();
   },
 };
+
+/**
+ * Validates that the patron's current seat selection does not leave an isolated single empty seat (orphan gap)
+ * in any row or wing block next to their newly selected seats.
+ */
+export function validateOrphanSeatGap(
+  selectedIds: number[],
+  bookedIds: number[],
+  blockedIds: number[]
+): { hasGap: boolean; orphanSeat?: TheaterSeat; message?: string } {
+  if (selectedIds.length === 0) return { hasGap: false };
+
+  const occupiedSet = new Set([...bookedIds, ...blockedIds, ...selectedIds]);
+  const previouslyOccupiedSet = new Set([...bookedIds, ...blockedIds]);
+
+  for (const seat of THEATER_SEATS) {
+    // Check if this seat is currently available (not selected and not previously booked/blocked)
+    if (!occupiedSet.has(seat.id)) {
+      // Find its adjacent neighbor(s) within the same block (Left: 1-4, Right: 5-8)
+      const sameBlockSeats = THEATER_SEATS.filter(
+        (s) => s.row === seat.row && s.block === seat.block
+      );
+      
+      const leftNeighbor = sameBlockSeats.find((s) => s.col === seat.col - 1);
+      const rightNeighbor = sameBlockSeats.find((s) => s.col === seat.col + 1);
+
+      const isLeftOccupied = !leftNeighbor || occupiedSet.has(leftNeighbor.id);
+      const isRightOccupied = !rightNeighbor || occupiedSet.has(rightNeighbor.id);
+
+      // It is an orphan gap if both adjacent sides in the block are occupied
+      if (isLeftOccupied && isRightOccupied) {
+        // Was it already an orphan before the user's selection?
+        const wasLeftOccupied = !leftNeighbor || previouslyOccupiedSet.has(leftNeighbor.id);
+        const wasRightOccupied = !rightNeighbor || previouslyOccupiedSet.has(rightNeighbor.id);
+
+        if (!(wasLeftOccupied && wasRightOccupied)) {
+          // This orphan was created directly by the user's selection!
+          return {
+            hasGap: true,
+            orphanSeat: seat,
+            message: `Seat ${seat.rowLabel}${seat.col} (Seat #${seat.id}) would be left as an isolated single seat. Please choose adjacent seats.`,
+          };
+        }
+      }
+    }
+  }
+
+  return { hasGap: false };
+}
+

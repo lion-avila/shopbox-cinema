@@ -16,14 +16,14 @@ import { MovieList } from './components/MovieList';
 import { ShowtimePicker } from './components/ShowtimePicker';
 import { SeatMap } from './components/SeatMap';
 import { MovieDetailsModal } from './components/MovieDetailsModal';
-import { ConcessionsModal } from './components/ConcessionsModal';
-import { CheckoutModal } from './components/CheckoutModal';
 import { TicketModal } from './components/TicketModal';
 import { MyTicketsModal } from './components/MyTicketsModal';
 import { OriginalChartModal } from './components/OriginalChartModal';
 import { ScheduleView } from './components/ScheduleView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AuthModal } from './components/auth/AuthModal';
+import { ConcessionsView } from './components/ConcessionsView';
+import { PaymentCheckoutView } from './components/PaymentCheckoutView';
 import { Check, ChevronRight } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -37,7 +37,9 @@ export const App: React.FC = () => {
 
   const [isAdminPortal, setIsAdminPortal] = useState<boolean>(checkIsAdmin);
   const [currentView, setCurrentView] = useState<'home' | 'schedule'>('home');
-  const [bookingStep, setBookingStep] = useState<'catalog' | 'showtimes' | 'seats'>('catalog');
+  const [bookingStep, setBookingStep] = useState<
+    'catalog' | 'showtimes' | 'seats' | 'concessions' | 'payment'
+  >('catalog');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Domain & CMS Data
@@ -61,8 +63,6 @@ export const App: React.FC = () => {
 
   // Modals
   const [detailsMovie, setDetailsMovie] = useState<Movie | null>(null);
-  const [isConcessionsOpen, setIsConcessionsOpen] = useState(false);
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [confirmedBooking, setConfirmedBooking] = useState<Booking | null>(null);
   const [isMyTicketsOpen, setIsMyTicketsOpen] = useState(false);
   const [isOriginalChartOpen, setIsOriginalChartOpen] = useState(false);
@@ -117,6 +117,15 @@ export const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleDirectSessionBooking = (movie: Movie, showtime: Showtime) => {
+    setSelectedMovie(movie);
+    setSelectedShowtime(showtime);
+    setSelectedDate(showtime.date);
+    setBookingStep('seats');
+    setSelectedSeats([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleToggleSeat = (seatId: number) => {
     if (selectedSeats.includes(seatId)) {
       setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
@@ -147,21 +156,23 @@ export const App: React.FC = () => {
   };
 
   const handleProceedToConcessions = () => {
-    setIsConcessionsOpen(true);
+    setBookingStep('concessions');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleProceedToCheckout = () => {
-    setIsConcessionsOpen(false);
-    setIsCheckoutOpen(true);
+    setBookingStep('payment');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBookingSuccess = (booking: Booking) => {
-    setIsCheckoutOpen(false);
     setConfirmedBooking(booking);
     refreshData();
     setSelectedSeats([]);
     setSelectedConcessions([]);
     setBookingStep('catalog');
+    sessionStorage.removeItem('shopbox_active_hold_v1');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectSessionFromSchedule = (movie: Movie, showtime: Showtime) => {
@@ -213,11 +224,12 @@ export const App: React.FC = () => {
             onLogoutPatron={handleLogoutPatron}
           />
 
-          {/* Interactive Booking Stepper Bar (Visible when inside booking steps) */}
+          {/* Interactive 5-Step Booking Stepper Bar */}
           {currentView === 'home' && bookingStep !== 'catalog' && (
             <div className="bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
               <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between overflow-x-auto scrollbar-none font-mono text-[10px] sm:text-xs">
-                <div className="flex items-center space-x-2 sm:space-x-4">
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  {/* Step 01 */}
                   <button
                     onClick={() => setBookingStep('catalog')}
                     className="flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--accent-brass)] transition-colors whitespace-nowrap"
@@ -225,11 +237,12 @@ export const App: React.FC = () => {
                     <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
                       <Check className="w-2.5 h-2.5 stroke-[3]" />
                     </span>
-                    <span>01 / Film Catalog</span>
+                    <span>01 / Film</span>
                   </button>
 
-                  <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+                  <ChevronRight className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
 
+                  {/* Step 02 */}
                   <button
                     onClick={() => setBookingStep('showtimes')}
                     className={`flex items-center space-x-1.5 whitespace-nowrap transition-colors ${
@@ -238,34 +251,86 @@ export const App: React.FC = () => {
                         : 'text-[var(--text-secondary)] hover:text-[var(--accent-brass)]'
                     }`}
                   >
-                    {bookingStep === 'seats' ? (
+                    {bookingStep !== 'showtimes' ? (
                       <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
                         <Check className="w-2.5 h-2.5 stroke-[3]" />
                       </span>
                     ) : (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
                     )}
-                    <span>02 / Showtime</span>
+                    <span>02 / Time</span>
                   </button>
 
-                  <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+                  <ChevronRight className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
 
-                  <span
-                    className={`flex items-center space-x-1.5 whitespace-nowrap ${
+                  {/* Step 03 */}
+                  <button
+                    onClick={() => {
+                      if (selectedShowtime) setBookingStep('seats');
+                    }}
+                    className={`flex items-center space-x-1.5 whitespace-nowrap transition-colors ${
                       bookingStep === 'seats'
                         ? 'text-[var(--accent-brass)] font-bold'
-                        : 'text-[var(--text-muted)]'
+                        : bookingStep === 'concessions' || bookingStep === 'payment'
+                        ? 'text-[var(--text-secondary)] hover:text-[var(--accent-brass)]'
+                        : 'text-[var(--text-muted)] opacity-60'
                     }`}
                   >
-                    {bookingStep === 'seats' && (
+                    {bookingStep === 'concessions' || bookingStep === 'payment' ? (
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    ) : bookingStep === 'seats' ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                    ) : null}
+                    <span>03 / Seats</span>
+                  </button>
+
+                  <ChevronRight className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
+
+                  {/* Step 04 */}
+                  <button
+                    onClick={() => {
+                      if (selectedSeats.length > 0) setBookingStep('concessions');
+                    }}
+                    disabled={selectedSeats.length === 0}
+                    className={`flex items-center space-x-1.5 whitespace-nowrap transition-colors ${
+                      bookingStep === 'concessions'
+                        ? 'text-[var(--accent-brass)] font-bold'
+                        : bookingStep === 'payment'
+                        ? 'text-[var(--text-secondary)] hover:text-[var(--accent-brass)]'
+                        : 'text-[var(--text-muted)] opacity-60'
+                    }`}
+                  >
+                    {bookingStep === 'payment' ? (
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    ) : bookingStep === 'concessions' ? (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                    ) : null}
+                    <span>04 / Bar</span>
+                  </button>
+
+                  <ChevronRight className="w-3 h-3 text-[var(--text-muted)] shrink-0" />
+
+                  {/* Step 05 */}
+                  <span
+                    className={`flex items-center space-x-1.5 whitespace-nowrap ${
+                      bookingStep === 'payment'
+                        ? 'text-[var(--accent-brass)] font-bold'
+                        : 'text-[var(--text-muted)] opacity-60'
+                    }`}
+                  >
+                    {bookingStep === 'payment' && (
                       <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
                     )}
-                    <span>03 / 72-Seat Matrix</span>
+                    <span>05 / Payment</span>
                   </span>
                 </div>
 
                 {selectedMovie && (
-                  <span className="hidden md:inline-block text-[var(--text-muted)] truncate max-w-[240px]">
+                  <span className="hidden md:inline-block text-[var(--text-muted)] truncate max-w-[200px]">
                     {selectedMovie.title}
                   </span>
                 )}
@@ -298,9 +363,11 @@ export const App: React.FC = () => {
                 {bookingStep === 'catalog' && (
                   <MovieList
                     movies={movies}
+                    showtimes={showtimes}
                     onSelectMovie={handleSelectMovie}
                     onOpenDetails={(movie) => setDetailsMovie(movie)}
                     onSelectShowtimeQuick={() => setCurrentView('schedule')}
+                    onSelectShowtimeSession={handleDirectSessionBooking}
                     siteConfig={siteConfig}
                   />
                 )}
@@ -325,8 +392,43 @@ export const App: React.FC = () => {
                     onToggleSeat={handleToggleSeat}
                     onClearSeats={() => setSelectedSeats([])}
                     onProceedToCheckout={handleProceedToConcessions}
+                    onSkipToPayment={handleProceedToCheckout}
                     onBackToShowtimes={() => setBookingStep('showtimes')}
                     onOpenOriginalChart={() => setIsOriginalChartOpen(true)}
+                  />
+                )}
+
+                {bookingStep === 'concessions' && selectedMovie && selectedShowtime && (
+                  <ConcessionsView
+                    movie={selectedMovie}
+                    showtime={selectedShowtime}
+                    selectedSeats={selectedSeats}
+                    selectedConcessions={selectedConcessions}
+                    onUpdateQuantity={handleUpdateConcessionQuantity}
+                    onProceedToPayment={handleProceedToCheckout}
+                    onBackToSeats={() => {
+                      setBookingStep('seats');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    onSkipToPayment={() => {
+                      setSelectedConcessions([]);
+                      handleProceedToCheckout();
+                    }}
+                  />
+                )}
+
+                {bookingStep === 'payment' && selectedMovie && selectedShowtime && (
+                  <PaymentCheckoutView
+                    movie={selectedMovie}
+                    showtime={selectedShowtime}
+                    selectedSeats={selectedSeats}
+                    concessions={selectedConcessions}
+                    onBookingSuccess={handleBookingSuccess}
+                    onBackToConcessions={() => {
+                      setBookingStep('concessions');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    currentPatron={currentPatron}
                   />
                 )}
               </>
@@ -358,31 +460,6 @@ export const App: React.FC = () => {
               handleSelectMovie(movie);
             }}
           />
-
-          <ConcessionsModal
-            isOpen={isConcessionsOpen}
-            onClose={() => setIsConcessionsOpen(false)}
-            selectedConcessions={selectedConcessions}
-            onUpdateQuantity={handleUpdateConcessionQuantity}
-            onProceed={handleProceedToCheckout}
-            ticketSubtotal={
-              (selectedShowtime?.price || siteConfig.ticketPrice) * selectedSeats.length
-            }
-            seatCount={selectedSeats.length}
-          />
-
-          {selectedMovie && selectedShowtime && (
-            <CheckoutModal
-              isOpen={isCheckoutOpen}
-              onClose={() => setIsCheckoutOpen(false)}
-              movie={selectedMovie}
-              showtime={selectedShowtime}
-              selectedSeats={selectedSeats}
-              concessions={selectedConcessions}
-              onBookingSuccess={handleBookingSuccess}
-              currentPatron={currentPatron}
-            />
-          )}
 
           <TicketModal
             booking={confirmedBooking}

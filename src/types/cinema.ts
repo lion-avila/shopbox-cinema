@@ -14,6 +14,8 @@ export interface Movie {
   isNowShowing: boolean;
 }
 
+export type ExhibitionFormat = '4K Laser' | 'Dolby Atmos 7.1' | "Director's Cut";
+
 export interface Showtime {
   id: string;
   movieId: string;
@@ -21,9 +23,11 @@ export interface Showtime {
   time: string; // "11:30 AM", "02:15 PM", etc.
   price: number; // 350 PHP
   hall: string; // "Hall 1 (Main Theater)"
+  format?: ExhibitionFormat;
 }
 
 export type SeatStatus = 'available' | 'selected' | 'reserved' | 'blocked';
+export type SeatCategory = 'standard' | 'wheelchair' | 'companion' | 'vip';
 
 export interface TheaterSeat {
   id: number; // 1 to 72 matching Seats.jpg
@@ -31,6 +35,7 @@ export interface TheaterSeat {
   rowLabel: string; // A through I
   col: number; // 1 to 8
   block: 'left' | 'right'; // Left (1-4) or Right (5-8)
+  category?: SeatCategory;
 }
 
 export interface ConcessionItem {

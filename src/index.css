@@ -5,50 +5,108 @@
 @layer base {
   :root,
   html.light {
-    --bg-canvas: #F5F2EB;
-    --bg-surface: #FFFFFF;
-    --bg-elevated: #ECE8DF;
-    --bg-subtle: #DFDBD0;
-    --bg-glass-heavy: rgba(245, 242, 235, 0.96);
+    /* 4-Tier Semantic Elevation Architecture */
+    --bg-canvas: #F6F4EE;        /* Level 0: App Canvas */
+    --bg-l0: #F6F4EE;
+    --bg-surface: #FFFFFF;       /* Level 1: Film cards, seat canvas surface */
+    --bg-l1: #FFFFFF;
+    --bg-elevated: #EDE9E0;      /* Level 2: Sticky bars, receipt sidebar, rails */
+    --bg-l2: #EDE9E0;
+    --bg-subtle: #E2DDD2;
+    --bg-overlay: #FFFFFF;       /* Level 3: Floating sheets, modals, QR cards */
+    --bg-l3: #FFFFFF;
+    
+    --bg-glass-heavy: rgba(246, 244, 238, 0.96);
     --bg-surface-glass: rgba(255, 255, 255, 0.97);
+    --bg-overlay-glass: rgba(255, 255, 255, 0.98);
+
     --text-primary: #111115;
-    --text-secondary: #3F3E47;
-    --text-muted: #686770;
+    --text-secondary: #3B3A42;
+    --text-muted: #6B6A75;
     --text-inverse: #FFFFFF;
-    --border-subtle: rgba(17, 17, 21, 0.12);
-    --border-strong: rgba(17, 17, 21, 0.25);
+
+    --border-subtle: rgba(17, 17, 21, 0.10);
+    --border-strong: rgba(17, 17, 21, 0.22);
+    --border-focus: #8F681B;
+
     --accent-brass: #8F681B;
     --accent-brass-fill: #C5A059;
+    --accent-brass-subtle: rgba(197, 160, 89, 0.15);
+
+    /* Seat State Hierarchy */
     --seat-available-bg: #FFFFFF;
     --seat-available-border: rgba(17, 17, 21, 0.28);
     --seat-available-text: #111115;
+
+    --seat-selected-bg: #C5A059;
+    --seat-selected-border: #8F681B;
+    --seat-selected-text: #000000;
+
     --seat-reserved-bg: #E5E1D6;
     --seat-reserved-border: #C9C4B5;
     --seat-reserved-text: #7A7882;
+
+    --seat-accessible-bg: #EEF2FF;
+    --seat-accessible-border: #6366F1;
+    --seat-accessible-text: #4338CA;
+
+    --seat-companion-bg: #F0FDF4;
+    --seat-companion-border: #22C55E;
+    --seat-companion-text: #15803D;
+
     color-scheme: light;
   }
 
   html.dark {
-    --bg-canvas: #060608;
-    --bg-surface: #0C0C10;
-    --bg-elevated: #14141B;
-    --bg-subtle: #1C1C26;
-    --bg-glass-heavy: rgba(6, 6, 8, 0.96);
-    --bg-surface-glass: rgba(12, 12, 16, 0.97);
+    /* 4-Tier Semantic Elevation Architecture */
+    --bg-canvas: #070709;        /* Level 0: Deep Obsidian Canvas */
+    --bg-l0: #070709;
+    --bg-surface: #101015;       /* Level 1: Surface cards */
+    --bg-l1: #101015;
+    --bg-elevated: #171720;      /* Level 2: Sticky bars, receipt sidebar */
+    --bg-l2: #171720;
+    --bg-subtle: #21212C;
+    --bg-overlay: #20202C;       /* Level 3: Floating sheets, modals */
+    --bg-l3: #20202C;
+
+    --bg-glass-heavy: rgba(7, 7, 9, 0.96);
+    --bg-surface-glass: rgba(16, 16, 21, 0.97);
+    --bg-overlay-glass: rgba(32, 32, 44, 0.98);
+
     --text-primary: #F4F4F6;
     --text-secondary: #B4B4BE;
-    --text-muted: #7D7D87;
+    --text-muted: #7A7A85;
     --text-inverse: #09090B;
-    --border-subtle: rgba(255, 255, 255, 0.10);
-    --border-strong: rgba(255, 255, 255, 0.22);
+
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --border-focus: #C5A059;
+
     --accent-brass: #C5A059;
     --accent-brass-fill: #C5A059;
+    --accent-brass-subtle: rgba(197, 160, 89, 0.15);
+
+    /* Seat State Hierarchy */
     --seat-available-bg: #14141B;
     --seat-available-border: rgba(255, 255, 255, 0.18);
     --seat-available-text: #E4E4E7;
+
+    --seat-selected-bg: #C5A059;
+    --seat-selected-border: #E2C285;
+    --seat-selected-text: #000000;
+
     --seat-reserved-bg: #0D0D12;
-    --seat-reserved-border: #252530;
-    --seat-reserved-text: #52525B;
+    --seat-reserved-border: #242430;
+    --seat-reserved-text: #50505A;
+
+    --seat-accessible-bg: #1E1B4B;
+    --seat-accessible-border: #818CF8;
+    --seat-accessible-text: #C7D2FE;
+
+    --seat-companion-bg: #064E3B;
+    --seat-companion-border: #34D399;
+    --seat-companion-text: #A7F3D0;
+
     color-scheme: dark;
   }
 
@@ -58,12 +116,49 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.01em;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
     transition: background-color 180ms ease, color 180ms ease;
   }
 
   h1, h2, h3, h4 {
     letter-spacing: -0.025em;
   }
+}
+
+/* 6-Token Fluid Typography Scale */
+.font-display-fluid {
+  font-size: clamp(1.75rem, 4vw + 0.5rem, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+}
+
+.font-headline-fluid {
+  font-size: clamp(1.25rem, 2.5vw + 0.25rem, 1.75rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.font-subhead-fluid {
+  font-size: clamp(0.9375rem, 1.5vw + 0.1rem, 1.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.font-body-fluid {
+  font-size: clamp(0.8125rem, 0.4vw + 0.72rem, 0.9375rem);
+  line-height: 1.5;
+}
+
+.font-caption-fluid {
+  font-size: clamp(0.6875rem, 0.25vw + 0.65rem, 0.75rem);
+  line-height: 1.35;
+}
+
+.font-mono-label {
+  font-size: clamp(0.625rem, 0.2vw + 0.58rem, 0.6875rem);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 /* Scoped Light-Mode High-Contrast Mapping for Admin Sub-Modules */
@@ -139,9 +234,9 @@ html.light .admin-workspace .text-blue-400 {
 
 /* Minimalist architectural screen line */
 .architectural-screen {
-  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.20) 0%, rgba(197, 160, 89, 0) 100%);
-  border-top: 2px solid rgba(197, 160, 89, 0.75);
-  box-shadow: 0 -4px 24px -2px rgba(197, 160, 89, 0.25);
+  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.22) 0%, rgba(197, 160, 89, 0) 100%);
+  border-top: 2.5px solid rgba(197, 160, 89, 0.85);
+  box-shadow: 0 -4px 28px -2px rgba(197, 160, 89, 0.30);
 }
 
 /* Custom scrollbars */
