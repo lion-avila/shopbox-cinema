@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       {/* Main Header */}
-      <header className="sticky top-0 z-40 bg-[var(--bg-canvas)]/90 backdrop-blur-xl border-b border-[var(--border-subtle)] transition-colors">
+      <header className="sticky top-0 z-40 bg-[var(--bg-glass-heavy)] backdrop-blur-md border-b border-[var(--border-strong)] shadow-sm transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* Brand Identity — Pure Logo Without Rounded Box */}
@@ -211,14 +211,14 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Bottom App Navigation Bar */}
       <nav
         aria-label="Mobile Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-surface)]/95 backdrop-blur-2xl border-t border-[var(--border-subtle)] px-2 py-1.5 grid grid-cols-4 items-center"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-surface-glass)] backdrop-blur-md border-t border-[var(--border-strong)] shadow-[0_-4px_20px_rgba(0,0,0,0.12)] px-2 py-1.5 grid grid-cols-4 items-center"
       >
         <button
           onClick={() => onNavigate('home')}
           className={`flex flex-col items-center py-1 transition-colors relative ${
             currentView === 'home'
               ? 'text-[var(--accent-brass)] font-bold'
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           {currentView === 'home' && (
@@ -233,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           className={`flex flex-col items-center py-1 transition-colors relative ${
             currentView === 'schedule'
               ? 'text-[var(--accent-brass)] font-bold'
-              : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
+              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
           }`}
         >
           {currentView === 'schedule' && (
@@ -245,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         <button
           onClick={onOpenMyTickets}
-          className="flex flex-col items-center py-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors relative"
+          className="flex flex-col items-center py-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors relative"
         >
           <Ticket className="w-4 h-4 mb-0.5" />
           <span className="font-mono text-[9px] uppercase tracking-wider">Passes</span>
@@ -269,7 +269,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         ) : (
           <button
             onClick={onOpenAuth}
-            className="flex flex-col items-center py-1 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+            className="flex flex-col items-center py-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
           >
             <UserIcon className="w-4 h-4 mb-0.5" />
             <span className="font-mono text-[9px] uppercase tracking-wider">Sign In</span>

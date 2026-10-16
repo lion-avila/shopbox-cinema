@@ -221,7 +221,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Instrumentation Bar */}
-        <header className="h-16 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)] px-4 sm:px-6 flex items-center justify-between font-mono text-xs sticky top-0 z-30">
+        <header className="h-16 bg-[var(--bg-surface-glass)] backdrop-blur-md border-b border-[var(--border-strong)] px-4 sm:px-6 flex items-center justify-between font-mono text-xs sticky top-0 z-30 shadow-sm">
           <div className="flex items-center space-x-3 min-w-0">
             <div className="md:hidden flex items-center space-x-2.5">
               <BrandLogo className="w-7 h-7" alt="Shopbox" />
@@ -266,7 +266,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </header>
 
         {/* Active Module Workspace */}
-        <main className="flex-1 p-4 sm:p-8 overflow-y-auto">
+        <main className="admin-workspace flex-1 p-4 sm:p-8 overflow-y-auto">
           {activeTab === 'analytics' && <AnalyticsDashboard movies={movies} />}
 
           {activeTab === 'cms' && (
@@ -317,7 +317,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       {/* Mobile Admin Quick-Action Bottom Dock */}
       <nav
         aria-label="Mobile Admin Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-surface)]/95 backdrop-blur-2xl border-t border-[var(--border-subtle)] px-2 py-1.5 grid grid-cols-5 items-center font-mono"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-surface-glass)] backdrop-blur-md border-t border-[var(--border-strong)] px-2 py-1.5 grid grid-cols-5 items-center font-mono shadow-[0_-8px_24px_rgba(0,0,0,0.18)]"
       >
         {[
           { id: 'analytics' as const, label: 'Stats', icon: BarChart3 },
@@ -331,10 +331,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
             <button
               key={item.id}
               onClick={() => selectTab(item.id)}
-              className={`flex flex-col items-center py-1 relative ${
+              className={`flex flex-col items-center py-1 relative transition-colors ${
                 isActive
                   ? 'text-[var(--accent-brass)] font-bold'
-                  : 'text-[var(--text-muted)]'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium'
               }`}
             >
               {isActive && (
@@ -348,10 +348,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
         <button
           onClick={() => setIsMobileDrawerOpen(!isMobileDrawerOpen)}
-          className={`flex flex-col items-center py-1 relative ${
+          className={`flex flex-col items-center py-1 relative transition-colors ${
             isMobileDrawerOpen
               ? 'text-[var(--accent-brass)] font-bold'
-              : 'text-[var(--text-muted)]'
+              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium'
           }`}
         >
           <Menu className="w-4 h-4 mb-0.5" />

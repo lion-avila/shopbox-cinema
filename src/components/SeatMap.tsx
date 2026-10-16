@@ -212,7 +212,7 @@ export const SeatMap: React.FC<SeatMapProps> = ({
       </div>
 
       {/* Sticky Checkout Dock (Positioned cleanly above mobile bottom bar) */}
-      <div className="sticky bottom-16 md:bottom-6 z-30 p-4 sm:p-6 bg-[var(--bg-surface)]/95 backdrop-blur-xl border border-[var(--border-strong)] shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6">
+      <div className="sticky bottom-16 md:bottom-6 z-30 p-4 sm:p-6 bg-[var(--bg-surface-glass)] backdrop-blur-md border border-[var(--border-strong)] shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6">
         <div className="w-full sm:w-auto">
           <div className="flex flex-wrap items-center gap-2">
             <span className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-[var(--text-muted)] font-bold">

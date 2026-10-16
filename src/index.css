@@ -8,42 +8,46 @@
     --bg-canvas: #F5F2EB;
     --bg-surface: #FFFFFF;
     --bg-elevated: #ECE8DF;
-    --bg-subtle: #E2DDD2;
+    --bg-subtle: #DFDBD0;
+    --bg-glass-heavy: rgba(245, 242, 235, 0.96);
+    --bg-surface-glass: rgba(255, 255, 255, 0.97);
     --text-primary: #111115;
-    --text-secondary: #484750;
-    --text-muted: #6E6D76;
+    --text-secondary: #3F3E47;
+    --text-muted: #686770;
     --text-inverse: #FFFFFF;
-    --border-subtle: rgba(17, 17, 21, 0.11);
-    --border-strong: rgba(17, 17, 21, 0.24);
-    --accent-brass: #9A7222;
+    --border-subtle: rgba(17, 17, 21, 0.12);
+    --border-strong: rgba(17, 17, 21, 0.25);
+    --accent-brass: #8F681B;
     --accent-brass-fill: #C5A059;
     --seat-available-bg: #FFFFFF;
-    --seat-available-border: rgba(17, 17, 21, 0.22);
-    --seat-available-text: #18181B;
+    --seat-available-border: rgba(17, 17, 21, 0.28);
+    --seat-available-text: #111115;
     --seat-reserved-bg: #E5E1D6;
-    --seat-reserved-border: #D2CDBE;
-    --seat-reserved-text: #8C8A94;
+    --seat-reserved-border: #C9C4B5;
+    --seat-reserved-text: #7A7882;
     color-scheme: light;
   }
 
   html.dark {
     --bg-canvas: #060608;
     --bg-surface: #0C0C10;
-    --bg-elevated: #121218;
-    --bg-subtle: #181820;
+    --bg-elevated: #14141B;
+    --bg-subtle: #1C1C26;
+    --bg-glass-heavy: rgba(6, 6, 8, 0.96);
+    --bg-surface-glass: rgba(12, 12, 16, 0.97);
     --text-primary: #F4F4F6;
-    --text-secondary: #A1A1AA;
-    --text-muted: #71717A;
+    --text-secondary: #B4B4BE;
+    --text-muted: #7D7D87;
     --text-inverse: #09090B;
-    --border-subtle: rgba(255, 255, 255, 0.08);
-    --border-strong: rgba(255, 255, 255, 0.18);
+    --border-subtle: rgba(255, 255, 255, 0.10);
+    --border-strong: rgba(255, 255, 255, 0.22);
     --accent-brass: #C5A059;
     --accent-brass-fill: #C5A059;
-    --seat-available-bg: #121217;
-    --seat-available-border: rgba(255, 255, 255, 0.15);
-    --seat-available-text: #D4D4D8;
-    --seat-reserved-bg: #0E0E13;
-    --seat-reserved-border: #23232B;
+    --seat-available-bg: #14141B;
+    --seat-available-border: rgba(255, 255, 255, 0.18);
+    --seat-available-text: #E4E4E7;
+    --seat-reserved-bg: #0D0D12;
+    --seat-reserved-border: #252530;
     --seat-reserved-text: #52525B;
     color-scheme: dark;
   }
@@ -54,7 +58,7 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.01em;
     overflow-x: hidden;
-    transition: background-color 200ms ease, color 200ms ease;
+    transition: background-color 180ms ease, color 180ms ease;
   }
 
   h1, h2, h3, h4 {
@@ -62,83 +66,82 @@
   }
 }
 
-/* Swiss Archival Light Mode Automatic Surface Mapping for Deep Sub-Modules */
-html.light .bg-\[\#060608\],
-html.light .bg-\[\#050507\],
-html.light .bg-\[\#08080a\] {
-  background-color: var(--bg-canvas) !important;
-}
-
-html.light .bg-\[\#0a0a0d\],
-html.light .bg-\[\#0c0c10\],
-html.light .bg-\[\#0e0e12\] {
+/* Scoped Light-Mode High-Contrast Mapping for Admin Sub-Modules */
+html.light .admin-workspace .bg-\[\#0c0c10\] {
   background-color: var(--bg-surface) !important;
 }
-
-html.light .bg-\[\#0c0c10\]\/95,
-html.light .bg-\[\#060608\]\/90 {
-  background-color: rgba(255, 255, 255, 0.94) !important;
+html.light .admin-workspace .bg-zinc-950 {
+  background-color: var(--bg-canvas) !important;
 }
-
-html.light .bg-zinc-950 {
+html.light .admin-workspace .bg-zinc-900 {
   background-color: var(--bg-elevated) !important;
 }
-
-html.light .bg-zinc-900 {
+html.light .admin-workspace .bg-zinc-800 {
   background-color: var(--bg-subtle) !important;
 }
-
-html.light .text-white:not(.keep-white) {
+html.light .admin-workspace .text-white,
+html.light .admin-workspace .text-zinc-100,
+html.light .admin-workspace .text-zinc-200 {
   color: var(--text-primary) !important;
 }
-
-html.light .text-zinc-100,
-html.light .text-zinc-200,
-html.light .text-zinc-300 {
+html.light .admin-workspace .text-zinc-300,
+html.light .admin-workspace .text-zinc-400 {
   color: var(--text-secondary) !important;
 }
-
-html.light .text-zinc-400,
-html.light .text-zinc-500 {
+html.light .admin-workspace .text-zinc-500 {
   color: var(--text-muted) !important;
 }
-
-html.light .border-white\/\[0\.04\],
-html.light .border-white\/\[0\.06\],
-html.light .border-white\/\[0\.08\],
-html.light .border-white\/10,
-html.light .border-white\/15,
-html.light .border-white\/20 {
+html.light .admin-workspace .border-white\/\[0\.08\],
+html.light .admin-workspace .border-white\/\[0\.06\],
+html.light .admin-workspace .border-white\/\[0\.04\],
+html.light .admin-workspace .border-white\/10,
+html.light .admin-workspace .border-white\/15,
+html.light .admin-workspace .border-white\/20 {
   border-color: var(--border-subtle) !important;
 }
-
-html.light .divide-white\/\[0\.04\] > :not([hidden]) ~ :not([hidden]) {
+html.light .admin-workspace .divide-white\/\[0\.04\] > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--border-subtle) !important;
 }
-
-html.light .bg-zinc-100 {
-  background-color: #111115 !important;
-  color: #FFFFFF !important;
+html.light .admin-workspace .bg-zinc-100.text-black,
+html.light .admin-workspace .bg-white.text-black {
+  background-color: var(--text-primary) !important;
+  color: var(--text-inverse) !important;
 }
-
-html.light .bg-zinc-100:hover {
-  background-color: #C5A059 !important;
-  color: #111115 !important;
+html.light .admin-workspace .text-\[\#C5A059\] {
+  color: var(--accent-brass) !important;
+}
+html.light .admin-workspace .bg-emerald-950,
+html.light .admin-workspace .bg-emerald-950\/40,
+html.light .admin-workspace .bg-emerald-950\/60 {
+  background-color: rgba(16, 185, 129, 0.14) !important;
+}
+html.light .admin-workspace .text-emerald-300,
+html.light .admin-workspace .text-emerald-400 {
+  color: #047857 !important;
+}
+html.light .admin-workspace .bg-rose-950,
+html.light .admin-workspace .bg-rose-950\/20,
+html.light .admin-workspace .bg-rose-950\/40,
+html.light .admin-workspace .bg-rose-950\/60 {
+  background-color: rgba(244, 63, 94, 0.14) !important;
+}
+html.light .admin-workspace .text-rose-300,
+html.light .admin-workspace .text-rose-400 {
+  color: #be123c !important;
+}
+html.light .admin-workspace .bg-blue-950,
+html.light .admin-workspace .bg-blue-950\/60 {
+  background-color: rgba(59, 130, 246, 0.14) !important;
+}
+html.light .admin-workspace .text-blue-400 {
+  color: #1d4ed8 !important;
 }
 
 /* Minimalist architectural screen line */
 .architectural-screen {
-  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.18) 0%, rgba(197, 160, 89, 0) 100%);
-  border-top: 2px solid rgba(197, 160, 89, 0.65);
+  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.20) 0%, rgba(197, 160, 89, 0) 100%);
+  border-top: 2px solid rgba(197, 160, 89, 0.75);
   box-shadow: 0 -4px 24px -2px rgba(197, 160, 89, 0.25);
-}
-
-/* Subtle architectural grid overlay */
-.swiss-grid-bg {
-  background-size: 32px 32px;
-  background-image: 
-    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
 }
 
 /* Custom scrollbars */

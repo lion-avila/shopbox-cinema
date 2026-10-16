@@ -13,28 +13,28 @@ export const OriginalChartModal: React.FC<OriginalChartModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-md overflow-y-auto">
-      <div className="relative w-full max-w-3xl bg-[#0c0c10] border border-white/15 shadow-2xl my-8">
-        <div className="p-6 border-b border-white/[0.08] flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-3xl bg-[var(--bg-surface)] border border-[var(--border-strong)] shadow-2xl my-8">
+        <div className="p-6 border-b border-[var(--border-subtle)] flex items-center justify-between">
           <div>
-            <span className="font-mono text-[10px] uppercase tracking-widest text-[#C5A059] block">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--accent-brass)] font-bold block">
               Architectural Seating Plan
             </span>
-            <h3 className="font-display text-xl font-bold text-white uppercase tracking-tight">
+            <h3 className="font-display text-xl font-extrabold text-[var(--text-primary)] uppercase tracking-tight">
               Original Floor Plan Reference (Seats.jpg)
             </h3>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 border border-white/10 text-zinc-400 hover:text-white transition-colors"
+            className="p-2 border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:border-[var(--accent-brass)] transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         <div className="p-6 sm:p-8 flex flex-col items-center">
-          <div className="max-w-md w-full bg-white p-2 shadow-2xl border border-white/20">
+          <div className="max-w-md w-full bg-white p-2 shadow-2xl border border-[var(--border-strong)]">
             <img
               src="/seats.jpg"
               alt="Official Seat Arrangement (Seats.jpg)"
@@ -42,12 +42,12 @@ export const OriginalChartModal: React.FC<OriginalChartModalProps> = ({
             />
           </div>
 
-          <div className="mt-8 p-5 bg-zinc-950 border border-white/[0.08] font-mono text-xs text-zinc-300 max-w-lg w-full space-y-3">
-            <div className="flex items-center space-x-2 text-white font-bold uppercase tracking-wider">
-              <Check className="w-4 h-4 text-[#C5A059]" />
+          <div className="mt-8 p-5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] font-mono text-xs text-[var(--text-secondary)] max-w-lg w-full space-y-3">
+            <div className="flex items-center space-x-2 text-[var(--text-primary)] font-bold uppercase tracking-wider">
+              <Check className="w-4 h-4 text-[var(--accent-brass)]" />
               <span>100% Floor Plan Accuracy Specification</span>
             </div>
-            <ul className="space-y-1.5 text-zinc-400 text-[11px] leading-relaxed">
+            <ul className="space-y-1.5 text-[var(--text-secondary)] text-[11px] leading-relaxed">
               <li>• Screen positioned centrally at the top of the room.</li>
               <li>• Left Section: 4 seats per row (Seats 1–4, 9–12, ..., 65–68).</li>
               <li>• Central walking aisle dividing the auditorium into two equal wings.</li>

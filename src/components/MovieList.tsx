@@ -52,29 +52,41 @@ export const MovieList: React.FC<MovieListProps> = ({
 
   return (
     <div className="space-y-8 sm:space-y-14">
-      {/* Swiss Editorial Screening Room Spotlight (Always Dark Screening Box for Cinematic Contrast) */}
+      {/* Swiss Editorial Screening Room Spotlight (Theme-Adaptive High-Contrast Surface) */}
       {featuredMovie && (
         <section
           aria-label="Featured Exhibition"
-          className="relative border border-[var(--border-strong)] bg-[#09090d] overflow-hidden shadow-xl"
+          className="relative border border-[var(--border-strong)] bg-[var(--bg-surface)] overflow-hidden shadow-lg"
         >
-          {/* Backdrop Image */}
+          {/* Backdrop Image with High-Opacity Theme Mask */}
           <div className="absolute inset-0">
             <img
               src={featuredMovie.backdropUrl || featuredMovie.posterUrl}
               alt={featuredMovie.title}
-              className="w-full h-full object-cover opacity-30 sm:opacity-35"
+              className="w-full h-full object-cover opacity-25 sm:opacity-35"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#09090d] via-[#09090d]/80 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#09090d] via-[#09090d]/90 to-transparent" />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(to top, var(--bg-surface) 10%, var(--bg-surface-glass) 55%, transparent 100%)',
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  'linear-gradient(to right, var(--bg-surface) 15%, var(--bg-surface-glass) 65%, transparent 100%)',
+              }}
+            />
           </div>
 
           <div className="relative z-10 p-5 sm:p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
             <div className="lg:col-span-8 space-y-4 sm:space-y-5">
               {/* Technical Ribbon */}
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-mono text-zinc-300">
-                <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-[#C5A059]/20 text-[#E2C285] border border-[#C5A059]/40 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
-                  <Sparkles className="w-3 h-3 text-[#C5A059]" />
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-mono">
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-[var(--bg-elevated)] text-[var(--accent-brass)] border border-[var(--border-strong)] font-bold uppercase tracking-widest text-[9px] sm:text-[10px] shadow-sm">
+                  <Sparkles className="w-3 h-3 text-[var(--accent-brass)]" />
                   <span>
                     {siteConfig?.announcementText
                       ? siteConfig.announcementText
@@ -85,30 +97,32 @@ export const MovieList: React.FC<MovieListProps> = ({
 
               {/* Overline & Display Title */}
               <div>
-                <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] sm:text-xs text-[#C5A059] uppercase tracking-[0.2em] mb-1.5">
+                <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] sm:text-xs text-[var(--accent-brass)] font-bold uppercase tracking-[0.2em] mb-1.5">
                   <span>Featured Presentation • {featuredMovie.title}</span>
                   <span>•</span>
-                  <span className="keep-white text-white font-bold">{featuredMovie.rating}</span>
+                  <span className="px-1.5 py-0.5 bg-[var(--text-primary)] text-[var(--text-inverse)] font-bold text-[10px]">
+                    {featuredMovie.rating}
+                  </span>
                   <span>•</span>
-                  <span>{featuredMovie.durationMin} MINS</span>
+                  <span className="text-[var(--text-secondary)]">{featuredMovie.durationMin} MINS</span>
                 </div>
-                <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight keep-white text-white uppercase leading-[1.06]">
+                <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] uppercase leading-[1.06]">
                   {headline}
                 </h1>
               </div>
 
               {/* Synopsis */}
-              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl line-clamp-2 sm:line-clamp-3">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed max-w-2xl line-clamp-2 sm:line-clamp-3 font-medium">
                 {subtitle}
               </p>
 
               {/* Credits */}
-              <div className="pt-0.5 flex flex-wrap gap-x-6 gap-y-1 text-[10px] sm:text-xs text-zinc-400 font-mono">
+              <div className="pt-0.5 flex flex-wrap gap-x-6 gap-y-1 text-[10px] sm:text-xs text-[var(--text-muted)] font-mono">
                 <p>
-                  DIRECTOR: <span className="keep-white text-white font-semibold">{featuredMovie.director}</span>
+                  DIRECTOR: <span className="text-[var(--text-primary)] font-bold">{featuredMovie.director}</span>
                 </p>
                 <p className="hidden sm:block">
-                  CAST: <span className="text-zinc-200">{featuredMovie.cast.slice(0, 3).join(', ')}</span>
+                  CAST: <span className="text-[var(--text-secondary)] font-semibold">{featuredMovie.cast.slice(0, 3).join(', ')}</span>
                 </p>
               </div>
 
@@ -116,7 +130,7 @@ export const MovieList: React.FC<MovieListProps> = ({
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-2">
                 <button
                   onClick={() => onSelectMovie(featuredMovie)}
-                  className="px-5 py-3 sm:px-7 sm:py-3.5 bg-[#C5A059] hover:bg-[#E2C285] text-black font-mono font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center space-x-2 active:scale-95"
+                  className="px-5 py-3 sm:px-7 sm:py-3.5 bg-[#C5A059] hover:bg-[#E2C285] text-black font-mono font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center space-x-2 active:scale-95 shadow-md"
                 >
                   <span>Reserve Seats • ₱{ticketPrice}</span>
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -124,14 +138,14 @@ export const MovieList: React.FC<MovieListProps> = ({
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => onOpenDetails(featuredMovie)}
-                    className="flex-1 sm:flex-initial px-4 py-2.5 sm:px-5 sm:py-3.5 bg-white/10 hover:bg-white/20 keep-white text-white border border-white/20 font-mono text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center space-x-2"
+                    className="flex-1 sm:flex-initial px-4 py-2.5 sm:px-5 sm:py-3.5 bg-[var(--bg-surface-glass)] hover:bg-[var(--bg-elevated)] text-[var(--text-primary)] border border-[var(--border-strong)] font-mono text-xs uppercase tracking-wider font-bold transition-colors flex items-center justify-center space-x-2 shadow-sm"
                   >
-                    <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[var(--accent-brass)]" />
                     <span>Dossier & Trailer</span>
                   </button>
                   <button
                     onClick={onSelectShowtimeQuick}
-                    className="flex-1 sm:flex-initial px-3 py-2.5 sm:px-4 sm:py-3.5 text-zinc-300 hover:text-[#E2C285] text-[11px] sm:text-xs uppercase tracking-wider font-mono transition-colors text-center"
+                    className="flex-1 sm:flex-initial px-3 py-2.5 sm:px-4 sm:py-3.5 bg-[var(--bg-surface-glass)] border border-[var(--border-subtle)] hover:border-[var(--accent-brass)] text-[var(--text-primary)] hover:text-[var(--accent-brass)] text-[11px] sm:text-xs uppercase tracking-wider font-mono font-bold transition-colors text-center"
                   >
                     Full Schedule →
                   </button>
@@ -141,29 +155,29 @@ export const MovieList: React.FC<MovieListProps> = ({
 
             {/* Right Architectural Spec Box (Desktop) */}
             <div className="hidden lg:flex lg:col-span-4 justify-end">
-              <div className="w-64 p-5 bg-black/75 backdrop-blur-md border border-white/15 font-mono text-xs space-y-3">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
+              <div className="w-64 p-5 bg-[var(--bg-surface-glass)] backdrop-blur-md border border-[var(--border-strong)] font-mono text-xs space-y-3 shadow-xl">
+                <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
+                  <span className="text-[10px] uppercase tracking-widest text-[var(--accent-brass)] font-bold">
                     Auditorium Spec
                   </span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
                 </div>
                 <div className="space-y-1.5 text-[11px]">
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">ROOM:</span>
-                    <span className="keep-white text-white font-bold">HALL 01</span>
+                    <span className="text-[var(--text-muted)]">ROOM:</span>
+                    <span className="text-[var(--text-primary)] font-bold">HALL 01</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">CAPACITY:</span>
-                    <span className="keep-white text-white font-bold">72 SEATS (9×8)</span>
+                    <span className="text-[var(--text-muted)]">CAPACITY:</span>
+                    <span className="text-[var(--text-primary)] font-bold">72 SEATS (9×8)</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">ADMISSION:</span>
-                    <span className="text-[#C5A059] font-bold">₱{ticketPrice} FLAT</span>
+                    <span className="text-[var(--text-muted)]">ADMISSION:</span>
+                    <span className="text-[var(--accent-brass)] font-bold">₱{ticketPrice} FLAT</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-zinc-400">LOCATION:</span>
-                    <span className="keep-white text-white">VIRAC, CATANDUANES</span>
+                    <span className="text-[var(--text-muted)]">LOCATION:</span>
+                    <span className="text-[var(--text-primary)] font-semibold">VIRAC, CATANDUANES</span>
                   </div>
                 </div>
               </div>
