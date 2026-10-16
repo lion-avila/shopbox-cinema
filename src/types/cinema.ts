@@ -72,6 +72,7 @@ export interface SiteConfig {
   cinemaAddress: string;
   cinemaPhone: string;
   cinemaEmail: string;
+  facebookUrl?: string;
   openingHours: string;
   adminSecurityKey: string; // Master Key required to sign up new admin
 }

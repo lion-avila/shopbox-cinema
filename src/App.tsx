@@ -258,6 +258,7 @@ export const App: React.FC = () => {
 
       {/* Footer with Discreet Staff Portal Link */}
       <Footer
+        siteConfig={siteConfig}
         onOpenSeatReference={() => setIsOriginalChartOpen(true)}
         onNavigateToAdmin={navigateToAdmin}
       />

@@ -176,9 +176,10 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
   heroSubtitle: 'An intimate single-screen cinema experience with 4K laser projection and Dolby Atmos sound.',
   announcementText: 'Doors open 30 minutes prior to showtime • General admission ₱350 for all 72 seats',
   ticketPrice: 350,
-  cinemaAddress: 'Shopbox Center, Level 1 Auditorium, Metro Manila, Philippines',
-  cinemaPhone: '+63 (2) 8888-SHOP',
+  cinemaAddress: '4/f Shopbox Bldg. San Jose, Virac, Catanduanes, Philippines, 4800',
+  cinemaPhone: '0938 592 4822',
   cinemaEmail: 'boxoffice@shopboxcinema.ph',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=100088364273955',
   openingHours: 'Open Daily: 10:30 AM - 11:30 PM',
   adminSecurityKey: 'SHOPBOX-ADMIN-2026',
 };
@@ -308,7 +309,24 @@ export const CinemaStorage = {
       return DEFAULT_SITE_CONFIG;
     }
     try {
-      return { ...DEFAULT_SITE_CONFIG, ...JSON.parse(raw) };
+      const parsed = JSON.parse(raw);
+      // Migrate if old placeholder address was stored in user's browser
+      if (!parsed.facebookUrl || (parsed.cinemaAddress && parsed.cinemaAddress.includes('Metro Manila'))) {
+        const updated: SiteConfig = {
+          ...DEFAULT_SITE_CONFIG,
+          ...parsed,
+          cinemaAddress: (!parsed.cinemaAddress || parsed.cinemaAddress.includes('Metro Manila'))
+            ? DEFAULT_SITE_CONFIG.cinemaAddress
+            : parsed.cinemaAddress,
+          cinemaPhone: (!parsed.cinemaPhone || parsed.cinemaPhone.includes('8888-SHOP'))
+            ? DEFAULT_SITE_CONFIG.cinemaPhone
+            : parsed.cinemaPhone,
+          facebookUrl: parsed.facebookUrl || DEFAULT_SITE_CONFIG.facebookUrl,
+        };
+        localStorage.setItem(STORAGE_KEYS.SITE_CONFIG, JSON.stringify(updated));
+        return updated;
+      }
+      return { ...DEFAULT_SITE_CONFIG, ...parsed };
     } catch {
       return DEFAULT_SITE_CONFIG;
     }

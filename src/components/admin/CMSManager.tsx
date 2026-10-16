@@ -200,6 +200,19 @@ export const CMSManager: React.FC<CMSManagerProps> = ({ movies, onRefreshData })
               className="w-full px-3 py-2.5 bg-zinc-950 border border-white/10 text-white focus:outline-none focus:border-zinc-500"
             />
           </div>
+
+          <div className="sm:col-span-2">
+            <label className="text-zinc-400 uppercase text-[10px] block mb-1">
+              Official Facebook Page URL
+            </label>
+            <input
+              type="url"
+              placeholder="https://www.facebook.com/..."
+              value={config.facebookUrl || ''}
+              onChange={(e) => setConfig({ ...config, facebookUrl: e.target.value })}
+              className="w-full px-3 py-2.5 bg-zinc-950 border border-white/10 text-white focus:outline-none focus:border-zinc-500 font-mono text-xs"
+            />
+          </div>
         </div>
       </div>
     </form>
