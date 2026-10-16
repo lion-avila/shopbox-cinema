@@ -53,11 +53,11 @@ export const MovieCard: React.FC<MovieCardProps> = ({
           </div>
         )}
 
-        {/* Hover Dossier Trigger */}
+        {/* Hover Trailer Trigger */}
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/60">
           <span className="inline-flex items-center space-x-1.5 px-3.5 py-2 bg-[#09090d] text-white border border-[#C5A059] font-mono text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-2xl">
             <Play className="w-3 h-3 fill-[#C5A059] text-[#C5A059]" />
-            <span>Film Dossier</span>
+            <span>Trailer</span>
           </span>
         </div>
       </div>

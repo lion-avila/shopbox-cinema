@@ -27,7 +27,7 @@ export const MovieDetailsModal: React.FC<MovieDetailsModalProps> = ({
         {/* Close Button - Solid High Contrast */}
         <button
           onClick={onClose}
-          aria-label="Close film dossier"
+          aria-label="Close movie details"
           className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20 p-2 sm:p-2.5 bg-[#09090d] hover:bg-[#C5A059] text-white hover:text-black border border-white/25 transition-colors shadow-lg"
         >
           <X className="w-4 h-4" />

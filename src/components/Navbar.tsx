@@ -43,7 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center space-x-4">
             <span className="inline-flex items-center space-x-1.5 text-[var(--text-secondary)] font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>AUDITORIUM 01 • 72 RESERVED SEATS</span>
+              <span>AUDITORIUM 01 • 72-SEAT CAPACITY</span>
             </span>
             <span>•</span>
             <span>4K DCI LASER & DOLBY ATMOS</span>
@@ -59,31 +59,31 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* Main Header */}
+      {/* Main Header with Proportional Spacing on Mobile (iPhone 16 tested) */}
       <header className="sticky top-0 z-40 bg-[var(--bg-glass-heavy)] backdrop-blur-md border-b border-[var(--border-strong)] shadow-sm transition-colors">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 sm:h-20">
-            {/* Brand Identity — Pure Logo Without Rounded Box */}
+        <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-15 sm:h-20 gap-2 sm:gap-4">
+            {/* Brand Identity — Pure Logo with Balanced Proportions */}
             <button
               onClick={() => onNavigate('home')}
-              className="flex items-center space-x-3 sm:space-x-3.5 text-left group focus:outline-none"
+              className="flex items-center space-x-2.5 sm:space-x-3.5 text-left group focus:outline-none min-w-0"
             >
               <BrandLogo
-                className="w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-200 group-hover:scale-105"
+                className="w-7 h-7 sm:w-10 sm:h-10 transition-transform duration-200 group-hover:scale-105 shrink-0"
                 alt="Shopbox Cinema Logo"
               />
-              <div>
-                <div className="flex items-center space-x-1.5 sm:space-x-2">
-                  <span className="font-display text-sm sm:text-base font-extrabold tracking-[0.18em] text-[var(--text-primary)] uppercase">
+              <div className="min-w-0">
+                <div className="flex items-center space-x-1.5 sm:space-x-2 leading-none">
+                  <span className="font-display text-[13px] sm:text-base font-extrabold tracking-[0.14em] sm:tracking-[0.18em] text-[var(--text-primary)] uppercase">
                     Shopbox
                   </span>
-                  <span className="font-display text-sm sm:text-base font-medium tracking-[0.18em] text-[var(--text-muted)] uppercase">
+                  <span className="font-display text-[13px] sm:text-base font-medium tracking-[0.14em] sm:tracking-[0.18em] text-[var(--text-muted)] uppercase">
                     Cinema
                   </span>
                 </div>
-                <div className="flex items-center space-x-2 mt-0.5">
-                  <span className="font-mono text-[9px] sm:text-[10px] text-[var(--text-muted)] tracking-wider uppercase">
-                    Virac, Catanduanes • Hall 01
+                <div className="flex items-center space-x-1.5 mt-1 sm:mt-0.5">
+                  <span className="font-mono text-[8.5px] sm:text-[10px] text-[var(--text-muted)] tracking-wider uppercase truncate">
+                    Virac • Hall 01
                   </span>
                 </div>
               </div>
@@ -135,18 +135,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </nav>
 
-            {/* Theme Toggle & Patron Account Controls */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
-              <ThemeToggle />
+            {/* Theme Toggle & Patron Account Controls with Proportional Mobile Heights */}
+            <div className="flex items-center space-x-1.5 sm:space-x-3 shrink-0">
+              <ThemeToggle compact className="h-8 sm:h-9 px-2 sm:px-2.5" />
 
               {currentPatron ? (
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center space-x-1.5 sm:space-x-2 px-2.5 sm:px-3.5 py-2 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-[var(--accent-brass)] font-mono text-[11px] sm:text-xs text-[var(--text-primary)] transition-colors"
+                    className="flex items-center space-x-1.5 sm:space-x-2 h-8 sm:h-9 px-2 sm:px-3.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] hover:border-[var(--accent-brass)] font-mono text-[10px] sm:text-xs text-[var(--text-primary)] transition-colors"
                   >
                     <UserIcon className="w-3.5 h-3.5 text-[var(--accent-brass)]" />
-                    <span className="max-w-[85px] sm:max-w-[120px] truncate uppercase font-bold">
+                    <span className="max-w-[70px] sm:max-w-[120px] truncate uppercase font-bold">
                       {currentPatron.name.split(' ')[0]}
                     </span>
                   </button>
@@ -197,7 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               ) : (
                 <button
                   onClick={onOpenAuth}
-                  className="px-3 sm:px-4 py-2 bg-[var(--text-primary)] hover:bg-[#C5A059] text-[var(--text-inverse)] hover:text-black font-mono font-bold text-[11px] sm:text-xs uppercase tracking-wider transition-all flex items-center space-x-1.5 active:scale-95"
+                  className="h-8 sm:h-9 px-2.5 sm:px-4 bg-[var(--text-primary)] hover:bg-[#C5A059] text-[var(--text-inverse)] hover:text-black font-mono font-bold text-[10px] sm:text-xs uppercase tracking-wider transition-all flex items-center space-x-1 sm:space-x-1.5 active:scale-95 shrink-0"
                 >
                   <UserIcon className="w-3.5 h-3.5" />
                   <span>Sign In</span>

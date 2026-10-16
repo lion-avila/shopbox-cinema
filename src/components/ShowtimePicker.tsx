@@ -144,7 +144,7 @@ export const ShowtimePicker: React.FC<ShowtimePickerProps> = ({
             <span>02 / Select Screening Time (Hall 01)</span>
           </h3>
           <span className="font-mono text-[10px] sm:text-xs text-[var(--accent-brass)] font-bold">
-            72 Reserved Seats / Session
+            72-Seat Capacity / Session
           </span>
         </div>
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Movie, Showtime, TheaterSeat } from '../types/cinema';
 import { THEATER_SEATS, CinemaStorage } from '../services/storage';
-import { Check, X, Lock, Eye, ArrowLeft, ArrowRight, RotateCcw, AlertCircle } from 'lucide-react';
+import { Check, X, Lock, ArrowLeft, ArrowRight, RotateCcw, AlertCircle } from 'lucide-react';
 
 interface SeatMapProps {
   movie: Movie;
@@ -11,7 +11,7 @@ interface SeatMapProps {
   onClearSeats?: () => void;
   onProceedToCheckout: () => void;
   onBackToShowtimes: () => void;
-  onOpenOriginalChart: () => void;
+  onOpenOriginalChart?: () => void;
 }
 
 export const SeatMap: React.FC<SeatMapProps> = ({
@@ -22,7 +22,6 @@ export const SeatMap: React.FC<SeatMapProps> = ({
   onClearSeats,
   onProceedToCheckout,
   onBackToShowtimes,
-  onOpenOriginalChart,
 }) => {
   const { booked, blocked } = CinemaStorage.getOccupiedSeatsForShowtime(showtime.id);
 
@@ -69,14 +68,6 @@ export const SeatMap: React.FC<SeatMapProps> = ({
             </p>
           </div>
         </div>
-
-        <button
-          onClick={onOpenOriginalChart}
-          className="flex items-center space-x-1.5 px-3 py-2 border border-[var(--border-strong)] hover:border-[var(--accent-brass)] text-[10px] sm:text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--accent-brass)] transition-colors shrink-0"
-        >
-          <Eye className="w-3.5 h-3.5" />
-          <span>Architectural Blueprint (Seats.jpg)</span>
-        </button>
       </div>
 
       {/* Max 8 Seats Edge State Alert */}

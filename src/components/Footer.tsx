@@ -1,17 +1,15 @@
 import React from 'react';
-import { MapPin, Phone, Mail, Clock, Eye, ExternalLink, Shield } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { SiteConfig } from '../types/cinema';
 import { BrandLogo } from '../context/ThemeContext';
 
 interface FooterProps {
-  onOpenSeatReference: () => void;
+  onOpenSeatReference?: () => void;
   onNavigateToAdmin?: () => void;
   siteConfig?: SiteConfig;
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onOpenSeatReference,
-  onNavigateToAdmin,
   siteConfig,
 }) => {
   const address =
@@ -35,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
           <div>PROJECTION: 4K DCI LASER</div>
           <div>AUDIO: DOLBY ATMOS 7.1</div>
-          <div>CAPACITY: 72 RESERVED SEATS</div>
+          <div>CAPACITY: 72 SEATS TOTAL</div>
           <div className="text-[var(--accent-brass)] font-bold">FLAT RATE: ₱{ticketPrice}</div>
         </div>
 
@@ -56,18 +54,8 @@ export const Footer: React.FC<FooterProps> = ({
 
             <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-md leading-relaxed">
               An intimate single-auditorium cinema dedicated to high-contrast laser projection,
-              calibrated room acoustics, and reserved 72-seat theatrical exhibition in Catanduanes.
+              calibrated room acoustics, and an intimate 72-seat theatrical experience in Catanduanes.
             </p>
-
-            <div className="pt-1">
-              <button
-                onClick={onOpenSeatReference}
-                className="inline-flex items-center space-x-2 text-xs font-mono text-[var(--accent-brass)] hover:underline underline-offset-4 transition-colors"
-              >
-                <Eye className="w-3.5 h-3.5" />
-                <span>Inspect 72-Seat Architectural Blueprint (Seats.jpg)</span>
-              </button>
-            </div>
           </div>
 
           {/* Location & Box Office */}
@@ -151,16 +139,10 @@ export const Footer: React.FC<FooterProps> = ({
           <p className="font-mono text-[11px]">
             © {new Date().getFullYear()} Shopbox Cinema • San Jose, Virac, Catanduanes.
           </p>
-          <div className="flex items-center space-x-6 font-mono text-[11px]">
+          <div className="flex items-center space-x-4 font-mono text-[11px]">
             <span>Hall 01 Exhibition System</span>
             <span>•</span>
-            <button
-              onClick={onNavigateToAdmin}
-              className="inline-flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--accent-brass)] uppercase font-semibold transition-colors"
-            >
-              <Shield className="w-3 h-3" />
-              <span>Staff & Box Office Terminal</span>
-            </button>
+            <span>Single-Hall Operations</span>
           </div>
         </div>
       </div>

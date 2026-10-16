@@ -51,7 +51,7 @@ export const ScheduleView: React.FC<ScheduleViewProps> = ({
           Auditorium 01 Master Schedule
         </h2>
         <p className="text-xs sm:text-sm text-[var(--text-secondary)] max-w-2xl">
-          All screenings take place sequentially in Hall 01 (4/F Shopbox Bldg., Virac, Catanduanes) with 72 reserved seats per session.
+          All screenings take place sequentially in Hall 01 (4/F Shopbox Bldg., Virac, Catanduanes) with 72-seat capacity per session.
         </p>
       </div>
 
