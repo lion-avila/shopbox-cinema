@@ -92,13 +92,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           {/* Brand */}
           <div className="p-6 border-b border-white/[0.08]">
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/15 p-1.5 flex items-center justify-center shrink-0">
-                <img
-                  src="/assets/logo-white.svg"
-                  alt="Shopbox Cinema"
-                  className="w-full h-full object-contain"
-                />
-              </div>
+              <img
+                src="/assets/logo-white.svg"
+                alt="Shopbox Cinema"
+                className="w-9 h-9 object-contain shrink-0"
+              />
               <div>
                 <h1 className="font-display font-extrabold text-sm uppercase tracking-[0.15em] text-white">
                   Shopbox

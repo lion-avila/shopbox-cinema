@@ -81,13 +81,11 @@ export const AdminAuthView: React.FC<AdminAuthViewProps> = ({
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <div className="w-14 h-14 mx-auto rounded-xl bg-white/5 p-2 overflow-hidden shadow-2xl border border-white/20 flex items-center justify-center">
-            <img
-              src="/assets/logo-white.svg"
-              alt="Shopbox Cinema"
-              className="w-full h-full object-contain"
-            />
-          </div>
+          <img
+            src="/assets/logo-white.svg"
+            alt="Shopbox Cinema"
+            className="w-14 h-14 mx-auto object-contain"
+          />
           <div>
             <h1 className="font-display text-xl font-extrabold uppercase tracking-[0.2em] text-white">
               Shopbox Cinema

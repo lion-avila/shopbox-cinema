@@ -34,13 +34,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onNavigate('home')}
               className="flex items-center space-x-2.5 sm:space-x-3.5 text-left group focus:outline-none"
             >
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/5 p-1 sm:p-1.5 overflow-hidden shrink-0 border border-white/15 transition-transform group-hover:scale-[1.05] group-hover:border-[#C5A059]/40 flex items-center justify-center">
-                <img
-                  src="/assets/logo-white.svg"
-                  alt="Shopbox Cinema Logo"
-                  className="w-full h-full object-contain"
-                />
-              </div>
+              <img
+                src="/assets/logo-white.svg"
+                alt="Shopbox Cinema Logo"
+                className="w-8 h-8 sm:w-10 sm:h-10 object-contain shrink-0 transition-transform group-hover:scale-105"
+              />
               <div>
                 <div className="flex items-center space-x-1.5 sm:space-x-2.5">
                   <span className="font-display text-sm sm:text-base font-extrabold tracking-[0.18em] text-white uppercase">

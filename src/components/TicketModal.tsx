@@ -76,13 +76,11 @@ export const TicketModal: React.FC<TicketModalProps> = ({ booking, onClose }) =>
           {/* Header Banner */}
           <div className="bg-white text-black p-6 flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 shrink-0 flex items-center justify-center">
-                <img
-                  src="/assets/logo-black.svg"
-                  alt="Shopbox Cinema"
-                  className="w-full h-full object-contain"
-                />
-              </div>
+              <img
+                src="/assets/logo-black.svg"
+                alt="Shopbox Cinema"
+                className="w-10 h-10 object-contain shrink-0"
+              />
               <div>
                 <h3 className="font-display font-extrabold text-base uppercase tracking-[0.15em] leading-tight">
                   Shopbox Cinema

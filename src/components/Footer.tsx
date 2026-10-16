@@ -38,13 +38,11 @@ export const Footer: React.FC<FooterProps> = ({
           {/* Brand info */}
           <div className="md:col-span-2 space-y-5">
             <div className="flex items-center space-x-3.5">
-              <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/15 p-1.5 flex items-center justify-center">
-                <img
-                  src="/assets/logo-white.svg"
-                  alt="Shopbox Cinema"
-                  className="w-full h-full object-contain"
-                />
-              </div>
+              <img
+                src="/assets/logo-white.svg"
+                alt="Shopbox Cinema"
+                className="w-9 h-9 object-contain shrink-0"
+              />
               <span className="font-display text-base font-extrabold tracking-[0.2em] text-white uppercase">
                 Shopbox Cinema
               </span>
