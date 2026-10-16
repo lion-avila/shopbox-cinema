@@ -3,12 +3,58 @@
 @tailwind utilities;
 
 @layer base {
+  :root,
+  html.light {
+    --bg-canvas: #F5F2EB;
+    --bg-surface: #FFFFFF;
+    --bg-elevated: #ECE8DF;
+    --bg-subtle: #E2DDD2;
+    --text-primary: #111115;
+    --text-secondary: #484750;
+    --text-muted: #6E6D76;
+    --text-inverse: #FFFFFF;
+    --border-subtle: rgba(17, 17, 21, 0.11);
+    --border-strong: rgba(17, 17, 21, 0.24);
+    --accent-brass: #9A7222;
+    --accent-brass-fill: #C5A059;
+    --seat-available-bg: #FFFFFF;
+    --seat-available-border: rgba(17, 17, 21, 0.22);
+    --seat-available-text: #18181B;
+    --seat-reserved-bg: #E5E1D6;
+    --seat-reserved-border: #D2CDBE;
+    --seat-reserved-text: #8C8A94;
+    color-scheme: light;
+  }
+
+  html.dark {
+    --bg-canvas: #060608;
+    --bg-surface: #0C0C10;
+    --bg-elevated: #121218;
+    --bg-subtle: #181820;
+    --text-primary: #F4F4F6;
+    --text-secondary: #A1A1AA;
+    --text-muted: #71717A;
+    --text-inverse: #09090B;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.18);
+    --accent-brass: #C5A059;
+    --accent-brass-fill: #C5A059;
+    --seat-available-bg: #121217;
+    --seat-available-border: rgba(255, 255, 255, 0.15);
+    --seat-available-text: #D4D4D8;
+    --seat-reserved-bg: #0E0E13;
+    --seat-reserved-border: #23232B;
+    --seat-reserved-text: #52525B;
+    color-scheme: dark;
+  }
+
   body {
-    background-color: #060608;
-    color: #e4e4e7;
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     letter-spacing: -0.01em;
     overflow-x: hidden;
+    transition: background-color 200ms ease, color 200ms ease;
   }
 
   h1, h2, h3, h4 {
@@ -16,20 +62,83 @@
   }
 }
 
+/* Swiss Archival Light Mode Automatic Surface Mapping for Deep Sub-Modules */
+html.light .bg-\[\#060608\],
+html.light .bg-\[\#050507\],
+html.light .bg-\[\#08080a\] {
+  background-color: var(--bg-canvas) !important;
+}
+
+html.light .bg-\[\#0a0a0d\],
+html.light .bg-\[\#0c0c10\],
+html.light .bg-\[\#0e0e12\] {
+  background-color: var(--bg-surface) !important;
+}
+
+html.light .bg-\[\#0c0c10\]\/95,
+html.light .bg-\[\#060608\]\/90 {
+  background-color: rgba(255, 255, 255, 0.94) !important;
+}
+
+html.light .bg-zinc-950 {
+  background-color: var(--bg-elevated) !important;
+}
+
+html.light .bg-zinc-900 {
+  background-color: var(--bg-subtle) !important;
+}
+
+html.light .text-white:not(.keep-white) {
+  color: var(--text-primary) !important;
+}
+
+html.light .text-zinc-100,
+html.light .text-zinc-200,
+html.light .text-zinc-300 {
+  color: var(--text-secondary) !important;
+}
+
+html.light .text-zinc-400,
+html.light .text-zinc-500 {
+  color: var(--text-muted) !important;
+}
+
+html.light .border-white\/\[0\.04\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/\[0\.08\],
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20 {
+  border-color: var(--border-subtle) !important;
+}
+
+html.light .divide-white\/\[0\.04\] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-subtle) !important;
+}
+
+html.light .bg-zinc-100 {
+  background-color: #111115 !important;
+  color: #FFFFFF !important;
+}
+
+html.light .bg-zinc-100:hover {
+  background-color: #C5A059 !important;
+  color: #111115 !important;
+}
+
 /* Minimalist architectural screen line */
 .architectural-screen {
-  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.12) 0%, rgba(255, 255, 255, 0) 100%);
-  border-top: 2px solid rgba(197, 160, 89, 0.5);
+  background: radial-gradient(50% 100% at 50% 100%, rgba(197, 160, 89, 0.18) 0%, rgba(197, 160, 89, 0) 100%);
+  border-top: 2px solid rgba(197, 160, 89, 0.65);
   box-shadow: 0 -4px 24px -2px rgba(197, 160, 89, 0.25);
 }
 
-/* Luxury film grain / micro texture effect */
-.cinema-border {
-  border: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.cinema-border-hover:hover {
-  border-color: rgba(197, 160, 89, 0.35);
+/* Subtle architectural grid overlay */
+.swiss-grid-bg {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, var(--border-subtle) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-subtle) 1px, transparent 1px);
 }
 
 /* Custom scrollbars */
@@ -39,16 +148,25 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #060608;
+  background: var(--bg-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #27272a;
-  border-radius: 3px;
+  background: var(--border-strong);
+  border-radius: 0px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #C5A059;
+}
+
+/* Hide scrollbar for mobile horizontal rails */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Print Ticket Media Queries */

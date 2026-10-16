@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,6 +8,26 @@ export default {
   theme: {
     extend: {
       colors: {
+        canvas: 'var(--bg-canvas)',
+        surface: 'var(--bg-surface)',
+        elevated: 'var(--bg-elevated)',
+        subtle: 'var(--bg-subtle)',
+        ink: {
+          DEFAULT: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          muted: 'var(--text-muted)',
+          inverse: 'var(--text-inverse)',
+        },
+        line: {
+          DEFAULT: 'var(--border-subtle)',
+          strong: 'var(--border-strong)',
+        },
+        brass: {
+          DEFAULT: 'var(--accent-brass)',
+          bright: '#C5A059',
+          light: '#E2C285',
+          dark: '#8C6722',
+        },
         brand: {
           950: '#050507',
           900: '#09090c',

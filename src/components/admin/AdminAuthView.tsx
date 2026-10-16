@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CinemaStorage } from '../../services/storage';
 import { User } from '../../types/cinema';
 import { Shield, KeyRound, Mail, Lock, User as UserIcon, Phone, ArrowRight, ArrowLeft, AlertTriangle, Check } from 'lucide-react';
+import { BrandLogo, ThemeToggle } from '../../context/ThemeContext';
 
 interface AdminAuthViewProps {
   onSuccess: (admin: User) => void;
@@ -77,20 +78,23 @@ export const AdminAuthView: React.FC<AdminAuthViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center bg-[#060608] px-4 py-12 font-sans selection:bg-[#C5A059] selection:text-black">
+    <div className="min-h-screen flex flex-col justify-center items-center bg-[var(--bg-canvas)] px-4 py-12 font-sans selection:bg-[#C5A059] selection:text-black relative">
+      <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <ThemeToggle />
+      </div>
+
       <div className="w-full max-w-md space-y-6">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <img
-            src="/assets/logo-white.svg"
+          <BrandLogo
+            className="w-14 h-14 mx-auto"
             alt="Shopbox Cinema"
-            className="w-14 h-14 mx-auto object-contain"
           />
           <div>
-            <h1 className="font-display text-xl font-extrabold uppercase tracking-[0.2em] text-white">
+            <h1 className="font-display text-xl font-extrabold uppercase tracking-[0.2em] text-[var(--text-primary)]">
               Shopbox Cinema
             </h1>
-            <p className="font-mono text-xs uppercase tracking-widest text-[#C5A059] mt-0.5">
+            <p className="font-mono text-xs uppercase tracking-widest text-[var(--accent-brass)] mt-0.5 font-bold">
               Auditorium 01 • Staff & Box Office Gateway
             </p>
           </div>

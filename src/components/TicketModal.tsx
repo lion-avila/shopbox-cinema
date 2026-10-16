@@ -204,7 +204,7 @@ export const TicketModal: React.FC<TicketModalProps> = ({ booking, onClose }) =>
 
           {/* Ticket Footer Note */}
           <div className="p-3 bg-black text-center font-mono text-[9px] text-zinc-400 uppercase tracking-widest border-t border-white/[0.06]">
-            Present at Hall 01 doors for barcode scanning & admission.
+            Present at Hall 01 Doors (4/F Shopbox Bldg., San Jose, Virac) • Tel: 0938 592 4822
           </div>
         </div>
 
@@ -212,17 +212,17 @@ export const TicketModal: React.FC<TicketModalProps> = ({ booking, onClose }) =>
         <div className="grid grid-cols-2 gap-3 no-print font-mono text-xs">
           <button
             onClick={handlePrint}
-            className="py-3 px-4 border border-white/20 hover:border-white text-white font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors"
+            className="py-3 px-4 bg-zinc-900/90 border border-white/25 hover:border-[#C5A059] keep-white text-white font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-colors"
           >
-            <Printer className="w-3.5 h-3.5" />
+            <Printer className="w-3.5 h-3.5 text-[#C5A059]" />
             <span>Print Ticket</span>
           </button>
 
           <button
             onClick={onClose}
-            className="py-3 px-4 bg-zinc-100 hover:bg-[#C5A059] text-black font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all active:scale-95"
+            className="py-3 px-4 bg-[#C5A059] hover:bg-[#E2C285] text-black font-bold uppercase tracking-wider flex items-center justify-center space-x-2 transition-all active:scale-95"
           >
-            <span>Close / Browse</span>
+            <span>Done / Close</span>
           </button>
         </div>
       </div>

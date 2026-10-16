@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Movie } from '../types/cinema';
+import { Movie, SiteConfig } from '../types/cinema';
 import { MovieCard } from './MovieCard';
-import { Search, ArrowRight, Play, Film, LayoutGrid, List } from 'lucide-react';
+import { Search, ArrowRight, Play, Film, LayoutGrid, List, RotateCcw, Sparkles, X } from 'lucide-react';
 
 interface MovieListProps {
   movies: Movie[];
   onSelectMovie: (movie: Movie) => void;
   onOpenDetails: (movie: Movie) => void;
   onSelectShowtimeQuick: () => void;
-  siteConfig?: import('../types/cinema').SiteConfig;
+  siteConfig?: SiteConfig;
 }
 
 export const MovieList: React.FC<MovieListProps> = ({
@@ -47,154 +47,201 @@ export const MovieList: React.FC<MovieListProps> = ({
   const subtitle = siteConfig?.heroSubtitle || featuredMovie?.synopsis;
   const ticketPrice = siteConfig?.ticketPrice || 350;
 
+  const nowCount = movies.filter((m) => m.isNowShowing).length;
+  const comingCount = movies.filter((m) => !m.isNowShowing).length;
+
   return (
-    <div className="space-y-10 sm:space-y-16">
-      {/* Editorial Cinema Hero Spotlight */}
+    <div className="space-y-8 sm:space-y-14">
+      {/* Swiss Editorial Screening Room Spotlight (Always Dark Screening Box for Cinematic Contrast) */}
       {featuredMovie && (
-        <div className="relative border border-white/[0.08] bg-[#0c0c10] overflow-hidden">
+        <section
+          aria-label="Featured Exhibition"
+          className="relative border border-[var(--border-strong)] bg-[#09090d] overflow-hidden shadow-xl"
+        >
           {/* Backdrop Image */}
           <div className="absolute inset-0">
             <img
               src={featuredMovie.backdropUrl || featuredMovie.posterUrl}
               alt={featuredMovie.title}
-              className="w-full h-full object-cover opacity-20 sm:opacity-25 filter grayscale-[20%]"
+              className="w-full h-full object-cover opacity-30 sm:opacity-35"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0c0c10] via-[#0c0c10]/80 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0c0c10] via-[#0c0c10]/95 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#09090d] via-[#09090d]/80 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#09090d] via-[#09090d]/90 to-transparent" />
           </div>
 
-          <div className="relative z-10 p-5 sm:p-12 lg:p-16 max-w-3xl space-y-4 sm:space-y-6">
-            {/* Meta Ribbon */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-mono text-zinc-400">
-              <span className="px-2 py-0.5 bg-[#C5A059]/15 text-[#C5A059] border border-[#C5A059]/30 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
-                {siteConfig?.announcementText ? siteConfig.announcementText : 'Now Screening • Hall 01'}
-              </span>
-              <span>•</span>
-              <span>{featuredMovie.rating}</span>
-              <span>•</span>
-              <span>{featuredMovie.durationMin} MINS</span>
-              <span>•</span>
-              <span className="text-zinc-200 font-bold">₱{ticketPrice} FLAT RATE</span>
-            </div>
+          <div className="relative z-10 p-5 sm:p-10 lg:p-14 grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+            <div className="lg:col-span-8 space-y-4 sm:space-y-5">
+              {/* Technical Ribbon */}
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs font-mono text-zinc-300">
+                <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 bg-[#C5A059]/20 text-[#E2C285] border border-[#C5A059]/40 font-bold uppercase tracking-widest text-[9px] sm:text-[10px]">
+                  <Sparkles className="w-3 h-3 text-[#C5A059]" />
+                  <span>
+                    {siteConfig?.announcementText
+                      ? siteConfig.announcementText
+                      : 'Now Screening • Auditorium 01'}
+                  </span>
+                </span>
+              </div>
 
-            {/* Title */}
-            <div>
-              <span className="font-mono text-[10px] sm:text-xs text-[#C5A059] uppercase tracking-widest block mb-1 sm:mb-2">
-                Featured Presentation • {featuredMovie.title}
-              </span>
-              <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white uppercase leading-[1.1]">
-                {headline}
-              </h1>
-            </div>
+              {/* Overline & Display Title */}
+              <div>
+                <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] sm:text-xs text-[#C5A059] uppercase tracking-[0.2em] mb-1.5">
+                  <span>Featured Presentation • {featuredMovie.title}</span>
+                  <span>•</span>
+                  <span className="keep-white text-white font-bold">{featuredMovie.rating}</span>
+                  <span>•</span>
+                  <span>{featuredMovie.durationMin} MINS</span>
+                </div>
+                <h1 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight keep-white text-white uppercase leading-[1.06]">
+                  {headline}
+                </h1>
+              </div>
 
-            {/* Synopsis */}
-            <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-light line-clamp-2 sm:line-clamp-3 max-w-2xl">
-              {subtitle}
-            </p>
+              {/* Synopsis */}
+              <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed max-w-2xl line-clamp-2 sm:line-clamp-3">
+                {subtitle}
+              </p>
 
-            {/* Film Details */}
-            <div className="pt-0.5 text-[10px] sm:text-xs text-zinc-400 font-mono space-y-0.5 sm:space-y-1">
-              <p>DIRECTED BY <span className="text-zinc-200">{featuredMovie.director}</span></p>
-              <p className="hidden sm:block">STARRING <span className="text-zinc-300">{featuredMovie.cast.slice(0, 3).join(', ')}</span></p>
-            </div>
+              {/* Credits */}
+              <div className="pt-0.5 flex flex-wrap gap-x-6 gap-y-1 text-[10px] sm:text-xs text-zinc-400 font-mono">
+                <p>
+                  DIRECTOR: <span className="keep-white text-white font-semibold">{featuredMovie.director}</span>
+                </p>
+                <p className="hidden sm:block">
+                  CAST: <span className="text-zinc-200">{featuredMovie.cast.slice(0, 3).join(', ')}</span>
+                </p>
+              </div>
 
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-2 sm:pt-4">
-              <button
-                onClick={() => onSelectMovie(featuredMovie)}
-                className="px-5 py-3 sm:px-6 sm:py-3.5 bg-zinc-100 hover:bg-[#C5A059] text-black font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center space-x-2 active:scale-95"
-              >
-                <span>Reserve Seats in Hall 1</span>
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </button>
-              <div className="flex items-center gap-2">
+              {/* Action Controls */}
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3.5 pt-2">
                 <button
-                  onClick={() => onOpenDetails(featuredMovie)}
-                  className="flex-1 sm:flex-initial px-4 py-2.5 sm:px-5 sm:py-3.5 bg-black/60 hover:bg-black text-zinc-200 hover:text-white border border-white/20 text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center space-x-2"
+                  onClick={() => onSelectMovie(featuredMovie)}
+                  className="px-5 py-3 sm:px-7 sm:py-3.5 bg-[#C5A059] hover:bg-[#E2C285] text-black font-mono font-bold text-xs uppercase tracking-widest transition-all flex items-center justify-center space-x-2 active:scale-95"
                 >
-                  <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  <span>Trailer & Info</span>
+                  <span>Reserve Seats • ₱{ticketPrice}</span>
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
-                <button
-                  onClick={onSelectShowtimeQuick}
-                  className="flex-1 sm:flex-initial px-3 py-2.5 sm:px-4 sm:py-3.5 text-zinc-400 hover:text-white text-[11px] sm:text-xs uppercase tracking-wider font-mono transition-colors text-center"
-                >
-                  Full Schedule →
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onOpenDetails(featuredMovie)}
+                    className="flex-1 sm:flex-initial px-4 py-2.5 sm:px-5 sm:py-3.5 bg-white/10 hover:bg-white/20 keep-white text-white border border-white/20 font-mono text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    <span>Dossier & Trailer</span>
+                  </button>
+                  <button
+                    onClick={onSelectShowtimeQuick}
+                    className="flex-1 sm:flex-initial px-3 py-2.5 sm:px-4 sm:py-3.5 text-zinc-300 hover:text-[#E2C285] text-[11px] sm:text-xs uppercase tracking-wider font-mono transition-colors text-center"
+                  >
+                    Full Schedule →
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Architectural Spec Box (Desktop) */}
+            <div className="hidden lg:flex lg:col-span-4 justify-end">
+              <div className="w-64 p-5 bg-black/75 backdrop-blur-md border border-white/15 font-mono text-xs space-y-3">
+                <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                  <span className="text-[10px] uppercase tracking-widest text-[#C5A059] font-bold">
+                    Auditorium Spec
+                  </span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                </div>
+                <div className="space-y-1.5 text-[11px]">
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">ROOM:</span>
+                    <span className="keep-white text-white font-bold">HALL 01</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">CAPACITY:</span>
+                    <span className="keep-white text-white font-bold">72 SEATS (9×8)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">ADMISSION:</span>
+                    <span className="text-[#C5A059] font-bold">₱{ticketPrice} FLAT</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-zinc-400">LOCATION:</span>
+                    <span className="keep-white text-white">VIRAC, CATANDUANES</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Program Header & Filter Row */}
-      <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 border-b border-white/[0.08] pb-4 sm:pb-6">
+      {/* Program Control Bar: Filter Tabs, View Switcher, & Search */}
+      <section className="space-y-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-[var(--border-subtle)] pb-4">
           <div>
-            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[#C5A059] block mb-1">
-              Program Selection
+            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-[var(--accent-brass)] font-bold block mb-1">
+              01 / Repertory & First-Run Program
             </span>
-            <h2 className="font-display text-xl sm:text-3xl font-bold text-white uppercase tracking-tight">
-              Current & Upcoming Films
+            <h2 className="font-display text-xl sm:text-3xl font-extrabold text-[var(--text-primary)] uppercase tracking-tight">
+              Exhibition Lineup
             </h2>
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end gap-2 w-full md:w-auto">
-            {/* Filter Pills */}
-            <div className="flex items-center space-x-1 border border-white/[0.08] p-1 bg-zinc-950 text-xs">
+          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 w-full md:w-auto">
+            {/* Filter Segmented Control */}
+            <div className="flex items-center border border-[var(--border-subtle)] p-1 bg-[var(--bg-surface)] font-mono">
               <button
                 onClick={() => setFilter('now')}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all ${
+                className={`px-3 sm:px-3.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all ${
                   filter === 'now'
-                    ? 'bg-zinc-100 text-black font-bold'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-[var(--text-primary)] text-[var(--text-inverse)] font-bold'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                Now Showing
+                Showing ({nowCount})
               </button>
               <button
                 onClick={() => setFilter('coming')}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all ${
+                className={`px-3 sm:px-3.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all ${
                   filter === 'coming'
-                    ? 'bg-zinc-100 text-black font-bold'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-[var(--text-primary)] text-[var(--text-inverse)] font-bold'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                Soon
+                Soon ({comingCount})
               </button>
               <button
                 onClick={() => setFilter('all')}
-                className={`px-2.5 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-mono uppercase tracking-wider transition-all ${
+                className={`px-2.5 sm:px-3.5 py-1.5 text-[10px] sm:text-xs uppercase tracking-wider transition-all ${
                   filter === 'all'
-                    ? 'bg-zinc-100 text-black font-bold'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-[var(--text-primary)] text-[var(--text-inverse)] font-bold'
+                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
                 }`}
               >
-                All
+                All ({movies.length})
               </button>
             </div>
 
-            {/* View Mode Switcher (Grid vs List) */}
-            <div className="flex items-center space-x-1 border border-white/[0.08] p-1 bg-zinc-950">
+            {/* View Mode Switcher (Grid vs Compact List) */}
+            <div className="flex items-center border border-[var(--border-subtle)] p-1 bg-[var(--bg-surface)]">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 sm:p-2 transition-colors ${
+                className={`p-1.5 transition-colors ${
                   viewMode === 'grid'
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-500 hover:text-zinc-300'
+                    ? 'bg-[var(--text-primary)] text-[var(--text-inverse)]'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                 }`}
-                title="2-Column Grid View"
+                title="2-Column Poster Grid"
+                aria-label="Poster Grid View"
               >
                 <LayoutGrid className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 sm:p-2 transition-colors ${
+                className={`p-1.5 transition-colors ${
                   viewMode === 'list'
-                    ? 'bg-zinc-800 text-white'
-                    : 'text-zinc-500 hover:text-zinc-300'
+                    ? 'bg-[var(--text-primary)] text-[var(--text-inverse)]'
+                    : 'text-[var(--text-muted)] hover:text-[var(--text-primary)]'
                 }`}
-                title="Compact Editorial List View"
+                title="Compact Editorial Index"
+                aria-label="Compact List View"
               >
                 <List className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
@@ -202,23 +249,32 @@ export const MovieList: React.FC<MovieListProps> = ({
           </div>
         </div>
 
-        {/* Search Bar */}
+        {/* Search Input with Instant Clear */}
         <div className="relative max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
           <input
             type="text"
-            placeholder="Search by title, director, or genre..."
+            placeholder="Search by film title, director, or genre..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 sm:py-2.5 bg-zinc-950 border border-white/[0.08] text-zinc-200 placeholder-zinc-500 text-[16px] sm:text-xs font-mono focus:outline-none focus:border-zinc-500 transition-colors"
+            className="w-full pl-10 pr-9 py-2 sm:py-2.5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] text-[16px] sm:text-xs font-mono focus:outline-none focus:border-[var(--accent-brass)] transition-colors"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              aria-label="Clear search"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
-      </div>
+      </section>
 
-      {/* Movies Catalog */}
+      {/* Catalog Display */}
       {filteredMovies.length > 0 ? (
         viewMode === 'grid' ? (
-          /* 2-Column Mobile Grid, 3-Col Tablet, 4-Col Desktop */
+          /* Strict 2-Column Mobile Grid -> 3-Col Tablet -> 4-Col Desktop */
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
             {filteredMovies.map((movie) => (
               <MovieCard
@@ -226,65 +282,73 @@ export const MovieList: React.FC<MovieListProps> = ({
                 movie={movie}
                 onSelectMovie={onSelectMovie}
                 onOpenDetails={onOpenDetails}
+                ticketPrice={ticketPrice}
               />
             ))}
           </div>
         ) : (
-          /* Compact Editorial Horizontal List View for Mobile & Power Users */
+          /* Compact Editorial Dossier List View */
           <div className="space-y-3">
-            {filteredMovies.map((movie) => (
+            {filteredMovies.map((movie, idx) => (
               <div
                 key={movie.id}
-                className="group p-3 sm:p-4 bg-[#0e0e12] border border-white/[0.08] hover:border-zinc-500/50 transition-all flex items-center justify-between gap-3 sm:gap-6"
+                className="group p-3 sm:p-4 bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-brass)] transition-all flex items-center justify-between gap-3 sm:gap-6"
               >
-                <div 
+                <div
                   onClick={() => onOpenDetails(movie)}
                   className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1 cursor-pointer"
                 >
-                  {/* Compact Poster Thumbnail */}
-                  <div className="w-14 sm:w-20 aspect-[2/3] bg-zinc-950 border border-white/10 shrink-0 overflow-hidden relative">
+                  <span className="hidden sm:inline-block font-mono text-xs text-[var(--text-muted)] w-6">
+                    0{idx + 1}
+                  </span>
+
+                  <div className="w-12 sm:w-16 aspect-[2/3] bg-zinc-900 border border-[var(--border-subtle)] shrink-0 overflow-hidden relative">
                     <img
                       src={movie.posterUrl}
                       alt={movie.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       loading="lazy"
                     />
-                    <span className="absolute bottom-1 left-1 font-mono text-[8px] px-1 bg-black/80 text-zinc-300">
-                      {movie.rating}
-                    </span>
                   </div>
 
-                  <div className="min-w-0 space-y-1">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-[#C5A059] block truncate">
-                      {movie.genre.join(' • ')}
-                    </span>
-                    <h3 className="font-display text-sm sm:text-base font-bold text-white group-hover:text-[#E2C285] transition-colors truncate">
+                  <div className="min-w-0 space-y-0.5 sm:space-y-1">
+                    <div className="flex items-center space-x-2 font-mono text-[9px] sm:text-[10px] uppercase tracking-wider">
+                      <span className="text-[var(--accent-brass)] font-bold">
+                        {movie.genre.join(' • ')}
+                      </span>
+                      <span className="text-[var(--text-muted)]">•</span>
+                      <span className="px-1.5 py-0.2 bg-[var(--bg-elevated)] text-[var(--text-primary)] font-bold">
+                        {movie.rating}
+                      </span>
+                    </div>
+                    <h3 className="font-display text-sm sm:text-base font-extrabold text-[var(--text-primary)] group-hover:text-[var(--accent-brass)] transition-colors truncate uppercase">
                       {movie.title}
                     </h3>
-                    <p className="text-[11px] text-zinc-400 font-mono truncate">
+                    <p className="text-[11px] text-[var(--text-muted)] font-mono truncate">
                       {movie.durationMin} MINS • Dir. {movie.director}
-                    </p>
-                    <p className="hidden md:block text-xs text-zinc-400 font-light line-clamp-1 max-w-xl">
-                      {movie.synopsis}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-3 shrink-0">
-                  <div className="text-right hidden sm:block">
-                    <span className="font-mono text-[9px] text-zinc-400 uppercase block">Rate</span>
-                    <span className="font-mono text-xs font-bold text-white">₱350</span>
+                <div className="flex items-center space-x-3 sm:space-x-4 shrink-0">
+                  <div className="text-right hidden sm:block font-mono">
+                    <span className="text-[9px] text-[var(--text-muted)] uppercase block">
+                      Hall 01
+                    </span>
+                    <span className="text-xs font-bold text-[var(--text-primary)]">
+                      ₱{ticketPrice}
+                    </span>
                   </div>
                   <button
                     onClick={() => onSelectMovie(movie)}
                     disabled={!movie.isNowShowing}
                     className={`px-3 sm:px-5 py-2 sm:py-2.5 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider transition-all flex items-center space-x-1.5 active:scale-95 ${
                       movie.isNowShowing
-                        ? 'bg-zinc-100 hover:bg-[#C5A059] text-black'
-                        : 'bg-zinc-900 text-zinc-500 border border-zinc-800 cursor-not-allowed'
+                        ? 'bg-[var(--text-primary)] hover:bg-[#C5A059] text-[var(--text-inverse)] hover:text-black'
+                        : 'bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border-subtle)] cursor-not-allowed'
                     }`}
                   >
-                    <span>{movie.isNowShowing ? 'Book Seats' : 'Coming Soon'}</span>
+                    <span>{movie.isNowShowing ? 'Reserve' : 'Soon'}</span>
                     {movie.isNowShowing && <ArrowRight className="w-3 h-3" />}
                   </button>
                 </div>
@@ -293,10 +357,29 @@ export const MovieList: React.FC<MovieListProps> = ({
           </div>
         )
       ) : (
-        <div className="py-20 text-center border border-white/[0.08] bg-zinc-950">
-          <Film className="w-10 h-10 text-zinc-400 mx-auto mb-3" />
-          <p className="font-mono text-sm text-zinc-300 uppercase">No screenings match your criteria</p>
-          <p className="text-xs text-zinc-400 mt-1">Try resetting the filter or search term</p>
+        /* Actionable Empty State */
+        <div className="py-16 px-4 text-center border border-[var(--border-subtle)] bg-[var(--bg-surface)] space-y-3">
+          <Film className="w-8 h-8 text-[var(--accent-brass)] mx-auto" />
+          <div className="space-y-1">
+            <p className="font-mono text-xs sm:text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
+              No Exhibitions Match Your Filter
+            </p>
+            <p className="text-xs text-[var(--text-muted)] max-w-md mx-auto">
+              No films found matching "{searchTerm || filter}". Reset your filter criteria to view all scheduled screenings in Hall 01.
+            </p>
+          </div>
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                setFilter('all');
+                setSearchTerm('');
+              }}
+              className="inline-flex items-center space-x-1.5 px-4 py-2 bg-[var(--text-primary)] text-[var(--text-inverse)] hover:bg-[#C5A059] hover:text-black font-mono text-xs font-bold uppercase tracking-wider transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset Program Filters</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

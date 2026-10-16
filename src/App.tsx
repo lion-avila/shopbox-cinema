@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Movie, Showtime, Booking, SelectedConcession, ConcessionItem, User, SiteConfig } from './types/cinema';
+import {
+  Movie,
+  Showtime,
+  Booking,
+  SelectedConcession,
+  ConcessionItem,
+  User,
+  SiteConfig,
+} from './types/cinema';
 import { CinemaStorage, getFormattedDate } from './services/storage';
+import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MovieList } from './components/MovieList';
@@ -15,9 +24,9 @@ import { OriginalChartModal } from './components/OriginalChartModal';
 import { ScheduleView } from './components/ScheduleView';
 import { AdminPortal } from './components/admin/AdminPortal';
 import { AuthModal } from './components/auth/AuthModal';
+import { Check, ChevronRight } from 'lucide-react';
 
 export const App: React.FC = () => {
-  // Routing State: Check if path starts with /admin, hash #/admin, or ?portal=admin
   const checkIsAdmin = () => {
     return (
       window.location.pathname.startsWith('/admin') ||
@@ -29,6 +38,7 @@ export const App: React.FC = () => {
   const [isAdminPortal, setIsAdminPortal] = useState<boolean>(checkIsAdmin);
   const [currentView, setCurrentView] = useState<'home' | 'schedule'>('home');
   const [bookingStep, setBookingStep] = useState<'catalog' | 'showtimes' | 'seats'>('catalog');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Domain & CMS Data
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -37,7 +47,9 @@ export const App: React.FC = () => {
   const [siteConfig, setSiteConfig] = useState<SiteConfig>(CinemaStorage.getSiteConfig());
 
   // Patron Auth State
-  const [currentPatron, setCurrentPatron] = useState<User | null>(CinemaStorage.getCurrentPatron());
+  const [currentPatron, setCurrentPatron] = useState<User | null>(
+    CinemaStorage.getCurrentPatron()
+  );
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
   // Booking Flow State
@@ -55,7 +67,6 @@ export const App: React.FC = () => {
   const [isMyTicketsOpen, setIsMyTicketsOpen] = useState(false);
   const [isOriginalChartOpen, setIsOriginalChartOpen] = useState(false);
 
-  // Load data on mount & listen to popstate
   const refreshData = () => {
     setMovies(CinemaStorage.getMovies());
     setShowtimes(CinemaStorage.getShowtimes());
@@ -66,6 +77,7 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     refreshData();
+    setIsLoading(false);
 
     const handlePopState = () => {
       setIsAdminPortal(checkIsAdmin());
@@ -78,29 +90,31 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Portal Navigation
   const navigateToAdmin = () => {
     window.history.pushState({}, '', '/admin');
     setIsAdminPortal(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navigateToCustomerSite = () => {
     window.history.pushState({}, '', '/');
     setIsAdminPortal(false);
     refreshData();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handlers
   const handleSelectMovie = (movie: Movie) => {
     setSelectedMovie(movie);
     setBookingStep('showtimes');
     setSelectedSeats([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectShowtime = (showtime: Showtime) => {
     setSelectedShowtime(showtime);
     setBookingStep('seats');
     setSelectedSeats([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleToggleSeat = (seatId: number) => {
@@ -108,7 +122,6 @@ export const App: React.FC = () => {
       setSelectedSeats(selectedSeats.filter((id) => id !== seatId));
     } else {
       if (selectedSeats.length >= 8) {
-        alert('Maximum of 8 seats per booking transaction.');
         return;
       }
       setSelectedSeats([...selectedSeats, seatId]);
@@ -146,7 +159,6 @@ export const App: React.FC = () => {
     setIsCheckoutOpen(false);
     setConfirmedBooking(booking);
     refreshData();
-    // Reset booking selection
     setSelectedSeats([]);
     setSelectedConcessions([]);
     setBookingStep('catalog');
@@ -159,6 +171,7 @@ export const App: React.FC = () => {
     setCurrentView('home');
     setBookingStep('seats');
     setSelectedSeats([]);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleLogoutPatron = () => {
@@ -166,23 +179,6 @@ export const App: React.FC = () => {
     setCurrentPatron(null);
   };
 
-  // ==========================================
-  // IF ON DEDICATED ADMIN PORTAL (/admin)
-  // ==========================================
-  if (isAdminPortal) {
-    return (
-      <AdminPortal
-        showtimes={showtimes}
-        movies={movies}
-        onRefreshData={refreshData}
-        onExitToCustomerSite={navigateToCustomerSite}
-      />
-    );
-  }
-
-  // ==========================================
-  // CUSTOMER-FACING BOOKING APPLICATION (/)
-  // Patron Bookings (Filtered strictly to logged-in user; 0 if signed out)
   const patronBookings = currentPatron
     ? bookings.filter(
         (b) =>
@@ -192,152 +188,228 @@ export const App: React.FC = () => {
     : [];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#060608] text-zinc-100 font-sans selection:bg-[#C5A059] selection:text-black">
-      {/* Global Patron Navigation */}
-      <Navbar
-        currentView={currentView}
-        onNavigate={(view) => {
-          setCurrentView(view);
-          if (view === 'home') setBookingStep('catalog');
-        }}
-        onOpenMyTickets={() => setIsMyTicketsOpen(true)}
-        bookingCount={patronBookings.length}
-        currentPatron={currentPatron}
-        onOpenAuth={() => setIsAuthOpen(true)}
-        onLogoutPatron={handleLogoutPatron}
-      />
-
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 sm:pb-8">
-        {currentView === 'schedule' ? (
-          /* Daily Master Schedule View */
-          <ScheduleView
-            movies={movies}
-            showtimes={showtimes}
-            onSelectSession={handleSelectSessionFromSchedule}
-          />
-        ) : (
-          /* Customer Booking Workflow */
-          <>
-            {bookingStep === 'catalog' && (
-              <MovieList
-                movies={movies}
-                onSelectMovie={handleSelectMovie}
-                onOpenDetails={(movie) => setDetailsMovie(movie)}
-                onSelectShowtimeQuick={() => setCurrentView('schedule')}
-                siteConfig={siteConfig}
-              />
-            )}
-
-            {bookingStep === 'showtimes' && selectedMovie && (
-              <ShowtimePicker
-                movie={selectedMovie}
-                showtimes={showtimes}
-                selectedDate={selectedDate}
-                onSelectDate={setSelectedDate}
-                selectedShowtime={selectedShowtime}
-                onSelectShowtime={handleSelectShowtime}
-                onBackToMovies={() => setBookingStep('catalog')}
-              />
-            )}
-
-            {bookingStep === 'seats' && selectedMovie && selectedShowtime && (
-              <SeatMap
-                movie={selectedMovie}
-                showtime={selectedShowtime}
-                selectedSeats={selectedSeats}
-                onToggleSeat={handleToggleSeat}
-                onProceedToCheckout={handleProceedToConcessions}
-                onBackToShowtimes={() => setBookingStep('showtimes')}
-                onOpenOriginalChart={() => setIsOriginalChartOpen(true)}
-              />
-            )}
-          </>
-        )}
-      </main>
-
-      {/* Footer with Discreet Staff Portal Link */}
-      <Footer
-        siteConfig={siteConfig}
-        onOpenSeatReference={() => setIsOriginalChartOpen(true)}
-        onNavigateToAdmin={navigateToAdmin}
-      />
-
-      {/* MODALS */}
-      {/* Patron Auth Modal (Login / Sign Up) */}
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-        onSuccess={(user) => {
-          setCurrentPatron(user);
-          refreshData();
-        }}
-      />
-
-      {/* Movie Details Modal */}
-      <MovieDetailsModal
-        movie={detailsMovie}
-        onClose={() => setDetailsMovie(null)}
-        onSelectMovie={(movie) => {
-          setDetailsMovie(null);
-          handleSelectMovie(movie);
-        }}
-      />
-
-      {/* Concessions Modal */}
-      <ConcessionsModal
-        isOpen={isConcessionsOpen}
-        onClose={() => setIsConcessionsOpen(false)}
-        selectedConcessions={selectedConcessions}
-        onUpdateQuantity={handleUpdateConcessionQuantity}
-        onProceed={handleProceedToCheckout}
-        ticketSubtotal={
-          (selectedShowtime?.price || siteConfig.ticketPrice) * selectedSeats.length
-        }
-        seatCount={selectedSeats.length}
-      />
-
-      {/* Checkout Modal */}
-      {selectedMovie && selectedShowtime && (
-        <CheckoutModal
-          isOpen={isCheckoutOpen}
-          onClose={() => setIsCheckoutOpen(false)}
-          movie={selectedMovie}
-          showtime={selectedShowtime}
-          selectedSeats={selectedSeats}
-          concessions={selectedConcessions}
-          onBookingSuccess={handleBookingSuccess}
-          currentPatron={currentPatron}
+    <ThemeProvider>
+      {isAdminPortal ? (
+        <AdminPortal
+          showtimes={showtimes}
+          movies={movies}
+          onRefreshData={refreshData}
+          onExitToCustomerSite={navigateToCustomerSite}
         />
+      ) : (
+        <div className="min-h-screen flex flex-col bg-[var(--bg-canvas)] text-[var(--text-primary)] font-sans selection:bg-[#C5A059] selection:text-black transition-colors">
+          {/* Global Patron Navigation */}
+          <Navbar
+            currentView={currentView}
+            onNavigate={(view) => {
+              setCurrentView(view);
+              if (view === 'home') setBookingStep('catalog');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            onOpenMyTickets={() => setIsMyTicketsOpen(true)}
+            bookingCount={patronBookings.length}
+            currentPatron={currentPatron}
+            onOpenAuth={() => setIsAuthOpen(true)}
+            onLogoutPatron={handleLogoutPatron}
+          />
+
+          {/* Interactive Booking Stepper Bar (Visible when inside booking steps) */}
+          {currentView === 'home' && bookingStep !== 'catalog' && (
+            <div className="bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
+              <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between overflow-x-auto scrollbar-none font-mono text-[10px] sm:text-xs">
+                <div className="flex items-center space-x-2 sm:space-x-4">
+                  <button
+                    onClick={() => setBookingStep('catalog')}
+                    className="flex items-center space-x-1.5 text-[var(--text-secondary)] hover:text-[var(--accent-brass)] transition-colors whitespace-nowrap"
+                  >
+                    <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                    </span>
+                    <span>01 / Film Catalog</span>
+                  </button>
+
+                  <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+
+                  <button
+                    onClick={() => setBookingStep('showtimes')}
+                    className={`flex items-center space-x-1.5 whitespace-nowrap transition-colors ${
+                      bookingStep === 'showtimes'
+                        ? 'text-[var(--accent-brass)] font-bold'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--accent-brass)]'
+                    }`}
+                  >
+                    {bookingStep === 'seats' ? (
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center">
+                        <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                    )}
+                    <span>02 / Showtime</span>
+                  </button>
+
+                  <ChevronRight className="w-3.5 h-3.5 text-[var(--text-muted)] shrink-0" />
+
+                  <span
+                    className={`flex items-center space-x-1.5 whitespace-nowrap ${
+                      bookingStep === 'seats'
+                        ? 'text-[var(--accent-brass)] font-bold'
+                        : 'text-[var(--text-muted)]'
+                    }`}
+                  >
+                    {bookingStep === 'seats' && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                    )}
+                    <span>03 / 72-Seat Matrix</span>
+                  </span>
+                </div>
+
+                {selectedMovie && (
+                  <span className="hidden md:inline-block text-[var(--text-muted)] truncate max-w-[240px]">
+                    {selectedMovie.title}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Main Content Area */}
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-24 sm:pb-12">
+            {isLoading ? (
+              <div className="space-y-8 animate-pulse">
+                <div className="h-72 sm:h-96 bg-[var(--bg-surface)] border border-[var(--border-subtle)]" />
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[1, 2, 3, 4].map((n) => (
+                    <div
+                      key={n}
+                      className="aspect-[2/3] bg-[var(--bg-surface)] border border-[var(--border-subtle)]"
+                    />
+                  ))}
+                </div>
+              </div>
+            ) : currentView === 'schedule' ? (
+              <ScheduleView
+                movies={movies}
+                showtimes={showtimes}
+                onSelectSession={handleSelectSessionFromSchedule}
+              />
+            ) : (
+              <>
+                {bookingStep === 'catalog' && (
+                  <MovieList
+                    movies={movies}
+                    onSelectMovie={handleSelectMovie}
+                    onOpenDetails={(movie) => setDetailsMovie(movie)}
+                    onSelectShowtimeQuick={() => setCurrentView('schedule')}
+                    siteConfig={siteConfig}
+                  />
+                )}
+
+                {bookingStep === 'showtimes' && selectedMovie && (
+                  <ShowtimePicker
+                    movie={selectedMovie}
+                    showtimes={showtimes}
+                    selectedDate={selectedDate}
+                    onSelectDate={setSelectedDate}
+                    selectedShowtime={selectedShowtime}
+                    onSelectShowtime={handleSelectShowtime}
+                    onBackToMovies={() => setBookingStep('catalog')}
+                  />
+                )}
+
+                {bookingStep === 'seats' && selectedMovie && selectedShowtime && (
+                  <SeatMap
+                    movie={selectedMovie}
+                    showtime={selectedShowtime}
+                    selectedSeats={selectedSeats}
+                    onToggleSeat={handleToggleSeat}
+                    onClearSeats={() => setSelectedSeats([])}
+                    onProceedToCheckout={handleProceedToConcessions}
+                    onBackToShowtimes={() => setBookingStep('showtimes')}
+                    onOpenOriginalChart={() => setIsOriginalChartOpen(true)}
+                  />
+                )}
+              </>
+            )}
+          </main>
+
+          {/* Footer with Virac Location, Facebook Link & Staff Gateway */}
+          <Footer
+            siteConfig={siteConfig}
+            onOpenSeatReference={() => setIsOriginalChartOpen(true)}
+            onNavigateToAdmin={navigateToAdmin}
+          />
+
+          {/* MODALS */}
+          <AuthModal
+            isOpen={isAuthOpen}
+            onClose={() => setIsAuthOpen(false)}
+            onSuccess={(user) => {
+              setCurrentPatron(user);
+              refreshData();
+            }}
+          />
+
+          <MovieDetailsModal
+            movie={detailsMovie}
+            onClose={() => setDetailsMovie(null)}
+            onSelectMovie={(movie) => {
+              setDetailsMovie(null);
+              handleSelectMovie(movie);
+            }}
+          />
+
+          <ConcessionsModal
+            isOpen={isConcessionsOpen}
+            onClose={() => setIsConcessionsOpen(false)}
+            selectedConcessions={selectedConcessions}
+            onUpdateQuantity={handleUpdateConcessionQuantity}
+            onProceed={handleProceedToCheckout}
+            ticketSubtotal={
+              (selectedShowtime?.price || siteConfig.ticketPrice) * selectedSeats.length
+            }
+            seatCount={selectedSeats.length}
+          />
+
+          {selectedMovie && selectedShowtime && (
+            <CheckoutModal
+              isOpen={isCheckoutOpen}
+              onClose={() => setIsCheckoutOpen(false)}
+              movie={selectedMovie}
+              showtime={selectedShowtime}
+              selectedSeats={selectedSeats}
+              concessions={selectedConcessions}
+              onBookingSuccess={handleBookingSuccess}
+              currentPatron={currentPatron}
+            />
+          )}
+
+          <TicketModal
+            booking={confirmedBooking}
+            onClose={() => setConfirmedBooking(null)}
+          />
+
+          <MyTicketsModal
+            isOpen={isMyTicketsOpen}
+            onClose={() => setIsMyTicketsOpen(false)}
+            currentPatron={currentPatron}
+            onOpenAuth={() => {
+              setIsMyTicketsOpen(false);
+              setIsAuthOpen(true);
+            }}
+            onViewTicket={(b) => {
+              setIsMyTicketsOpen(false);
+              setConfirmedBooking(b);
+            }}
+          />
+
+          <OriginalChartModal
+            isOpen={isOriginalChartOpen}
+            onClose={() => setIsOriginalChartOpen(false)}
+          />
+        </div>
       )}
-
-      {/* Confirmed E-Ticket Modal */}
-      <TicketModal
-        booking={confirmedBooking}
-        onClose={() => setConfirmedBooking(null)}
-      />
-
-      {/* Patron My Tickets Modal */}
-      <MyTicketsModal
-        isOpen={isMyTicketsOpen}
-        onClose={() => setIsMyTicketsOpen(false)}
-        currentPatron={currentPatron}
-        onOpenAuth={() => {
-          setIsMyTicketsOpen(false);
-          setIsAuthOpen(true);
-        }}
-        onViewTicket={(b) => {
-          setIsMyTicketsOpen(false);
-          setConfirmedBooking(b);
-        }}
-      />
-
-      {/* Original Scanned Seats.jpg Blueprint Modal */}
-      <OriginalChartModal
-        isOpen={isOriginalChartOpen}
-        onClose={() => setIsOriginalChartOpen(false)}
-      />
-    </div>
+    </ThemeProvider>
   );
 };
 
