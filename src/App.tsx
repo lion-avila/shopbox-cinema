@@ -182,7 +182,15 @@ export const App: React.FC = () => {
 
   // ==========================================
   // CUSTOMER-FACING BOOKING APPLICATION (/)
-  // ==========================================
+  // Patron Bookings (Filtered strictly to logged-in user; 0 if signed out)
+  const patronBookings = currentPatron
+    ? bookings.filter(
+        (b) =>
+          b.userId === currentPatron.id ||
+          b.customer.email.toLowerCase() === currentPatron.email.toLowerCase()
+      )
+    : [];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#060608] text-zinc-100 font-sans selection:bg-[#C5A059] selection:text-black">
       {/* Global Patron Navigation */}
@@ -193,7 +201,7 @@ export const App: React.FC = () => {
           if (view === 'home') setBookingStep('catalog');
         }}
         onOpenMyTickets={() => setIsMyTicketsOpen(true)}
-        bookingCount={bookings.length}
+        bookingCount={patronBookings.length}
         currentPatron={currentPatron}
         onOpenAuth={() => setIsAuthOpen(true)}
         onLogoutPatron={handleLogoutPatron}
@@ -312,6 +320,11 @@ export const App: React.FC = () => {
       <MyTicketsModal
         isOpen={isMyTicketsOpen}
         onClose={() => setIsMyTicketsOpen(false)}
+        currentPatron={currentPatron}
+        onOpenAuth={() => {
+          setIsMyTicketsOpen(false);
+          setIsAuthOpen(true);
+        }}
         onViewTicket={(b) => {
           setIsMyTicketsOpen(false);
           setConfirmedBooking(b);
